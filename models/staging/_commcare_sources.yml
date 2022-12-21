@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: source_commcare
+    schema: staging
+    database: ddp_pipeline_test
+    tables:
+      - name: anc
+        identifier: _airbyte_raw_anc_information
+        description: One record per form data. 
+      - name: zzz
+        identifier: _airbyte_raw_zzz_case
+        description: One record per form data. 
+   

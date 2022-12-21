@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: anc_information
+    description: "Add survey form data" 
+    +schema: intermediate
+    columns: 
+       - name: _airbyte_ab_id
+         description: "The primary key for this table"
+         tests:
+           - unique
+           - not_null
+
+  - name: zzz_case
+    description: "Add survey form data" 
+    +schema: intermediate
+    columns: 
+       - name: _airbyte_ab_id
+         description: "The primary key for this table"
+         tests:
+           - unique
+           - not_null 
