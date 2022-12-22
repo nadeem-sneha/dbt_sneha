@@ -1,0 +1,6 @@
+version: 2
+
+models: 
+
+  - name: form_and_case_merged
+    description: "merged model"
