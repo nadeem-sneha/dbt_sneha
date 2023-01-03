@@ -3,7 +3,6 @@ version: 2
 sources:
   - name: source_commcare
     schema: staging
-    database: postgres
     tables:
       - name: anc
         identifier: _airbyte_raw_anc_information
