@@ -11,6 +11,7 @@
 
 select
            _airbyte_ab_id,
+           _airbyte_emitted_at,
            _airbyte_data ->> 'id' as id,
            _airbyte_data ->> 'properties_womanid' as womanid,
            _airbyte_data ->> 'properties_womanname' as womanname,
