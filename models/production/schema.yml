@@ -2,5 +2,8 @@ version: 2
 
 models: 
 
-  - name: form_and_case_merged
-    description: "merged model"
+  - name: anc_case
+    description: "merged model with case and last visit date"
+
+  - name: anc_visit_by_month
+    description: "Aggregated visits of cases by CO per month"

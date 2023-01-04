@@ -1,8 +1,8 @@
 version: 2
 
 models:
-  - name: anc_information
-    description: "Add survey form data" 
+  - name: anc_visit_normalized
+    description: "Normalized data of ANC visit" 
     +schema: intermediate
     columns: 
        - name: _airbyte_ab_id
@@ -11,8 +11,8 @@ models:
            - unique
            - not_null
 
-  - name: zzz_case
-    description: "Add survey form data" 
+  - name: case_normalized
+    description: "Normalized cases" 
     +schema: intermediate
     columns: 
        - name: _airbyte_ab_id
@@ -21,7 +21,7 @@ models:
            - unique
            - not_null 
 
-  - name: remove_anc_duplicates
+  - name: anc_visit_duplicates_removed
     description: "Deduped model"
     columns:
       - name: id
@@ -30,7 +30,7 @@ models:
           - unique
           - not_null
 
-  - name: remove_zzz_case_duplicates
+  - name: case_duplicates_removed
     description: "Deduped model"
     columns:
       - name: id

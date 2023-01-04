@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: commcare_anc
+    schema: staging
+    tables:
+      - name: raw_anc_visit
+        identifier: _airbyte_raw_anc_information
+        description: Visit data for ANC Program 
+      - name: raw_case
+        identifier: _airbyte_raw_zzz_case
+        description: Cases across entire Commcare application 
+   

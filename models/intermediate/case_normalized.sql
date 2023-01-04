@@ -32,4 +32,4 @@ select
            (_airbyte_data ->> 'properties_gravida_count')::int as  gravida_count,
            _airbyte_data ->> 'properties_referral_followupname' as  referral_followupname
 
-from {{ source('source_commcare', 'zzz') }}
+from {{ source('commcare_anc', 'raw_case') }}
