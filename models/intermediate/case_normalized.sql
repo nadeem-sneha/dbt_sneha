@@ -33,7 +33,10 @@ select
         _airbyte_data ->> 'properties_referral_followupname' as  referral_followupname,
         _airbyte_data ->> 'properties_pregoutcome' as  pregoutcome,
         date(NULLIF(_airbyte_data ->> 'properties_delivery_date','')) as  delivery_date,
-        _airbyte_data ->> 'properties_case_type' as  case_type
+        _airbyte_data ->> 'properties_case_type' as  case_type,
+        _airbyte_data ->> 'properties_why_high_risk' as  why_high_risk,
+         _airbyte_data ->> 'properties_womengarde_cat' as  woman_bmi_grade
+
 
 from {{ source('commcare_anc', 'raw_case') }}
 where _airbyte_data ->> 'properties_case_type' = 'azmi_ancvisit'
