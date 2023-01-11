@@ -25,6 +25,9 @@ SELECT  c.id,
         c.pregoutcome,
         c.delivery_date,
         c.delivery_site,
+        CASE 
+              WHEN lower(delivery_site) like '%hospital%' THEN 'Institutional' ELSE 'Home/Other'
+        END AS delivery_site_type,
         c.case_type,
         date_part('months',age(current_date, c.lmpdate)) AS pregnantmonth,
         CASE 
