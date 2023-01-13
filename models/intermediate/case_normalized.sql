@@ -34,7 +34,7 @@ select
     	  _airbyte_data ->>  'properties_prev_pregoutcome' as prev_pregoutcome,
         (_airbyte_data ->> 'properties_gravida_count')::int as  gravida_count,
         _airbyte_data ->> 'properties_pregoutcome' as  pregoutcome,
-        _airbyte_data ->> 'properties_delivery_site' as  delivery_site,
+        _airbyte_data ->> 'properties_deliverysite' as  delivery_site,
         date(NULLIF(_airbyte_data ->> 'properties_delivery_date','')) as  delivery_date,
         _airbyte_data ->> 'properties_case_type' as  case_type
 
