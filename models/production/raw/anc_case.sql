@@ -5,30 +5,28 @@
 SELECT  c.id,
         c.womanname,
         c.womanid,
-        date_part('years',age(current_date, c.finalwdob)) AS age, 
-        c.gravida_count,
+        c.age,
         c.clusterid,
-        c.center,
+        c.clustername,
         c.coid,
         c.closed,
         c.anc_closereason,
         c.high_risk_preg,
         c.woman_bmi_grade,
         c.why_high_risk,
-        C.lmpdate,
+        c.lmpdate,
         c.referral,
         c.referral_date, 
         c.referral_place, 
         c.referral_reason,
-        C.referral_followupname, 
         c.referral_category,
+        c.gravida_count,
         c.pregoutcome,
         c.delivery_date,
         c.delivery_site,
         CASE 
-              WHEN lower(delivery_site) like '%hospital%' THEN 'Institutional'  
-              WHEN delivery_date IS NOT NULL THEN 'Home/Other'
-              ELSE NULL
+              WHEN lower(delivery_site) like '%home%' THEN 'Home'
+              ELSE 'Institutional'
         END AS delivery_site_type,
         c.case_type,
         date_part('months',age(current_date, c.lmpdate)) AS pregnantmonth,

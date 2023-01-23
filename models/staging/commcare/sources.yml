@@ -5,7 +5,7 @@ sources:
     schema: staging
     tables:
       - name: raw_anc_visit
-        identifier: _airbyte_raw_anc_information
+        identifier: _airbyte_raw_anc_pnc_visit
         description: Visit data for ANC Program 
       - name: raw_case
         identifier: _airbyte_raw_zzz_case
