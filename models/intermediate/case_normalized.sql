@@ -20,6 +20,7 @@ select
         _airbyte_data ->>  'properties_clustername' as clustername,
     	  _airbyte_data ->> 'properties_coid' as coid,
     	  (_airbyte_data ->>  'closed')::boolean as closed,
+        _airbyte_data ->>  'properties_anc_close' as anc_closed,
     	  _airbyte_data ->>  'properties_anc_closereason' as anc_closereason,
     	  _airbyte_data ->>  'properties_high_risk_preg' as high_risk_preg,
         _airbyte_data ->> 'properties_why_high_risk' as  why_high_risk,
