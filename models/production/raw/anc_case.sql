@@ -42,19 +42,21 @@ SELECT  c.id,
         c.delivery_site,
         CASE 
               WHEN lower(delivery_site) like '%home%' THEN 'Home'
-              ELSE 'Institutional'
+              WHEN delivery_site IS NOT NULL THEN 'Institutional'
         END AS delivery_site_type,
         c.case_type,
         date_part('months',age(current_date, c.lmpdate)) AS pregnantmonth,
         CASE 
-              when (date_part('months',age(current_date, c.lmpdate))>=0 AND date_part('months',age(current_date, c.lmpdate))<=3 AND c.closed = false )then 'First trimester'
-              when (date_part('months',age(current_date, c.lmpdate))>=4 AND date_part('months',age(current_date, c.lmpdate))<=6 AND c.closed = false)then 'Second trimester'
-              when (date_part('months',age(current_date, c.lmpdate))>=7 AND date_part('months',age(current_date, c.lmpdate))<=10 AND c.closed = false) then 'Third trimester'
-              ELSE 'NA' 
+              when (date_part('months',age(current_date, c.lmpdate))>=0 AND date_part('months',age(current_date, c.lmpdate))<=3 AND c.anc_closed IS NULL )then 'First trimester'
+              when (date_part('months',age(current_date, c.lmpdate))>=4 AND date_part('months',age(current_date, c.lmpdate))<=6 AND c.anc_closed IS NULL )then 'Second trimester'
+              when (date_part('months',age(current_date, c.lmpdate))>=7 AND date_part('months',age(current_date, c.lmpdate))<=10 AND c.anc_closed IS NULL) then 'Third trimester'
+              when (date_part('months',age(current_date, c.lmpdate))>10 AND c.anc_closed IS NULL) then 'Over-due'
+              ELSE 'NA'
         END AS trimester,
         form.lastvisitdate AS last_anc_visit_date, 
         current_date-form.lastvisitdate AS days_from_last_visit,
         form.lastvisitreason,
+        form.last_visit_conducted_by,
         CASE 
               when (extract(month FROM form.lastvisitdate) = extract(month from current_date))
                AND (extract(year FROM form.lastvisitdate) = extract(year from current_date)) 
@@ -65,5 +67,5 @@ SELECT  c.id,
 
 FROM {{ref('case_duplicates_removed')}} AS c
 LEFT JOIN
-(select caseid,visitdate AS lastvisitdate,visitreason AS lastvisitreason,why_high_risk from ordered_visits where ov=1 ) AS form 
+(select caseid,visitdate AS lastvisitdate,conducted_by AS last_visit_conducted_by, visitreason AS lastvisitreason,why_high_risk from ordered_visits where ov=1 ) AS form 
 ON form.caseid = c.id

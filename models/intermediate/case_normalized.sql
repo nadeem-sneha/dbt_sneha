@@ -35,9 +35,9 @@ select
         date(NULLIF(_airbyte_data ->>  'properties_edd','')) as edddate,
     	  _airbyte_data ->>  'properties_referral' as referral,
     	  date(NULLIF(_airbyte_data ->>  'properties_referraldate','')) as referral_date,
-    	  _airbyte_data ->>  'properties_referralplace' as referral_place,
-        CONCAT(_airbyte_data ->>  'properties_referralreason1',
-        _airbyte_data ->>  'properties_referralreason2',
+    	  _airbyte_data ->>  'properties_referralplace1' AS referral_place,
+        CONCAT(_airbyte_data ->>  'properties_referralreason1',',',
+        _airbyte_data ->>  'properties_referralreason2',',',
         _airbyte_data ->>  'properties_referralreason3') AS referral_reason,
     	  _airbyte_data ->>  'properties_referralreason1' as referral_reason1,
         _airbyte_data ->>  'properties_referralreason2' as referral_reason2,
@@ -50,4 +50,6 @@ select
         _airbyte_data ->> 'properties_case_type' as  case_type
 
 from {{ source('commcare_anc', 'raw_case') }}
-where _airbyte_data ->> 'properties_case_type' = 'case'
+where (_airbyte_data ->> 'properties_case_type') = 'case' 
+AND  (_airbyte_data ->> 'properties_coid') NOT IN ('00','001') 
+AND  (_airbyte_data ->> 'properties_coid') <> ''

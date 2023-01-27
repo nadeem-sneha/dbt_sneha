@@ -7,7 +7,8 @@
 
 ) }}
 
-select (_airbyte_data ->> 'visitreason') as visitreason, 
+select (_airbyte_data ->> 'visitreason') as visitreason,
+(_airbyte_data ->> 'hvconduct') as conducted_by, 
 (_airbyte_data ->> 'clusterid') as clusterid,
 (_airbyte_data ->> 'coid') as coid,
 (_airbyte_data ->> 'id') as id,
@@ -16,3 +17,6 @@ select (_airbyte_data ->> 'visitreason') as visitreason,
 date(NULLIF(_airbyte_data ->> 'visitdate','')) as visitdate, 
 _airbyte_data ->> 'load_person_case_id' as caseid, _airbyte_ab_id, _airbyte_emitted_at
 from {{ source('commcare_anc', 'raw_anc_visit') }} 
+where (_airbyte_data ->> 'visitreason') = 'ANC'
+AND  (_airbyte_data ->> 'coid') NOT IN ('00','001') 
+AND  (_airbyte_data ->> 'coid') <> ''
