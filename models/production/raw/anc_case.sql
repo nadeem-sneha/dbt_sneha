@@ -45,6 +45,7 @@ SELECT  c.id,
               WHEN delivery_site IS NOT NULL THEN 'Institutional'
         END AS delivery_site_type,
         c.case_type,
+        c.case_opened_date,
         date_part('months',age(current_date, c.lmpdate)) AS pregnantmonth,
         CASE 
               when (date_part('months',age(current_date, c.lmpdate))>=0 AND date_part('months',age(current_date, c.lmpdate))<=3 AND c.anc_closed IS NULL )then 'First trimester'

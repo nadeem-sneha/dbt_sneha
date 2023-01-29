@@ -47,7 +47,8 @@ select
         _airbyte_data ->> 'properties_pregoutcome' as  pregoutcome,
         date(NULLIF(_airbyte_data ->> 'properties_deliverydate','')) as  delivery_date,
         _airbyte_data ->> 'properties_deliverysite' as  delivery_site,
-        _airbyte_data ->> 'properties_case_type' as  case_type
+        _airbyte_data ->> 'properties_case_type' as  case_type,
+        date(NULLIF(_airbyte_data ->> 'properties_date_opened','')) as  case_opened_date
 
 from {{ source('commcare_anc', 'raw_case') }}
 where (_airbyte_data ->> 'properties_case_type') = 'case' 
