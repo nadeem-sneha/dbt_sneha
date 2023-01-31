@@ -45,7 +45,10 @@ SELECT  c.id,
               WHEN delivery_site IS NOT NULL THEN 'Institutional'
         END AS delivery_site_type,
         c.case_type,
+        c.individual_category,
+        c.service_registration,
         c.case_opened_date,
+        c.anc_identify_date,
         date_part('months',age(current_date, c.lmpdate)) AS pregnantmonth,
         CASE 
               when (date_part('months',age(current_date, c.lmpdate))>=0 AND date_part('months',age(current_date, c.lmpdate))<=3 AND c.anc_closed IS NULL )then 'First trimester'
@@ -66,7 +69,7 @@ SELECT  c.id,
         END AS currentmonthvisitStatus
 
 
-FROM {{ref('case_duplicates_removed')}} AS c
+FROM {{ref('anc_case_duplicates_removed')}} AS c
 LEFT JOIN
 (select caseid,visitdate AS lastvisitdate,conducted_by AS last_visit_conducted_by, visitreason AS lastvisitreason,why_high_risk from ordered_visits where ov=1 ) AS form 
 ON form.caseid = c.id

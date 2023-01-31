@@ -9,7 +9,7 @@
 ) }}
 
 {{ dbt_utils.deduplicate(
-    relation=ref('case_normalized'),
+    relation=ref('anc_case_normalized'),
     partition_by='id',
     order_by='_airbyte_emitted_at desc',
    )

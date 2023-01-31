@@ -11,8 +11,8 @@ models:
            - unique
            - not_null
 
-  - name: case_normalized
-    description: "Normalized cases" 
+  - name: anc_case_normalized
+    description: "Normalized ANC cases" 
     +schema: intermediate
     columns: 
        - name: _airbyte_ab_id
@@ -30,8 +30,8 @@ models:
           - unique
           - not_null
 
-  - name: case_duplicates_removed
-    description: "Deduped model"
+  - name: anc_case_duplicates_removed
+    description: "Deduped model for ANC cases"
     columns:
       - name: id
         description: "The primary key for this table"
