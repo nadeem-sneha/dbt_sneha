@@ -9,10 +9,7 @@
 
 select (_airbyte_data -> 'form' ->> 'visitreason') as visitreason,
 (_airbyte_data -> 'form' ->> 'hvconduct') as conducted_by, 
-(_airbyte_data -> 'form' ->> 'clusterid') as clusterid,
-(_airbyte_data -> 'form' ->>  'coid') as coid,
 (_airbyte_data ->> 'id') as id,
-(_airbyte_data -> 'form' ->> 'womanid') as womanid,
 (_airbyte_data -> 'form' ->> 'why_high_risk') as why_high_risk,
 date(NULLIF(_airbyte_data -> 'form' ->> 'visitdate','')) as visitdate, 
 _airbyte_data -> 'form' ->> 'load_person_case_id' as caseid,
