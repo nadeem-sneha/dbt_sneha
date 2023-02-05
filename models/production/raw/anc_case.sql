@@ -70,5 +70,5 @@ SELECT  c.id,
 
 FROM {{ref('anc_case_duplicates_removed')}} AS c
 LEFT JOIN
-(select caseid,visitdate AS lastvisitdate,conducted_by AS last_visit_conducted_by, visitreason AS lastvisitreason,why_high_risk from ordered_visits where ov=1 ) AS form 
+(select caseid,visitdate AS lastvisitdate,conducted_by AS last_visit_conducted_by, visitreason AS lastvisitreason,why_high_risk,hb_grade from ordered_visits where ov=1 ) AS form 
 ON form.caseid = c.id
