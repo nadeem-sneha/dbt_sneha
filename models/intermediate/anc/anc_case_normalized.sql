@@ -29,8 +29,7 @@ select
     	  _airbyte_data -> 'properties' ->> 'anc_closereason' as anc_closereason,
     	  _airbyte_data -> 'properties' ->> 'high_risk_preg' as high_risk_preg,
         _airbyte_data -> 'properties' ->> 'why_high_risk' as  why_high_risk,
-        /*_airbyte_data ->> 'properties' ->> 'womengarde_cat' as  woman_bmi_grade,*/
-        _airbyte_data -> 'properties' ->> 'hb_grade' as  woman_bmi_grade,
+        _airbyte_data -> 'properties' ->> 'hb_grade' as  hb_grade,
     	  date(NULLIF(_airbyte_data -> 'properties' ->> 'lmp','')) as lmpdate,
         date(NULLIF(_airbyte_data -> 'properties' ->> 'edd','')) as edddate,
     	  _airbyte_data -> 'properties' ->> 'referral' as referral,
