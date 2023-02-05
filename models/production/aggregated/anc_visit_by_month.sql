@@ -9,7 +9,6 @@ WITH visits_casedata AS (
   LEFT JOIN {{ref('anc_case_duplicates_removed')}} AS c
   ON visits.caseid=c.id)
   
-
 SELECT clusterid,clustername,coid,program_code, conducted_by, date_trunc('month', visitdate ) AS visit_month,count(DISTINCT caseid) AS visits_count
 FROM visits_casedata
 GROUP BY clusterid,clustername,coid,program_code,conducted_by,visit_month

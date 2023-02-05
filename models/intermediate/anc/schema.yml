@@ -11,8 +11,19 @@ models:
            - unique
            - not_null
 
+
+  - name: anc_outcomes_normalized
+    description: "Normalized data of ANC Delivery Information visit" 
+    +schema: intermediate
+    columns: 
+       - name: _airbyte_ab_id
+         description: "The primary key for this table"
+         tests:
+           - unique
+           - not_null
+
   - name: anc_case_normalized
-    description: "Normalized ANC cases" 
+    description: "Normalized model of ANC cases" 
     +schema: intermediate
     columns: 
        - name: _airbyte_ab_id
@@ -22,7 +33,16 @@ models:
            - not_null 
 
   - name: anc_visit_duplicates_removed
-    description: "Deduped model"
+    description: "Deduped model of ANC visits"
+    columns:
+      - name: id
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null
+
+  - name: anc_outcomes_duplicates_removed
+    description: "Deduped model of ANC delivery information"
     columns:
       - name: id
         description: "The primary key for this table"

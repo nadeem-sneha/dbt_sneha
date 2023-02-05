@@ -40,7 +40,7 @@ SELECT  c.id,
         c.delivery_date,
         c.delivery_site,
         CASE 
-              WHEN lower(delivery_site) like '%home%' THEN 'Home'
+              WHEN delivery_site = 'Home delivery' THEN 'Home'
               WHEN delivery_site IS NOT NULL THEN 'Institutional'
         END AS delivery_site_type,
         c.case_type,
