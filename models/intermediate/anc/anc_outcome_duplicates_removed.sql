@@ -7,7 +7,7 @@
 ) }}
 
 {{ dbt_utils.deduplicate(
-    relation=ref('anc_visit_normalized'),
+    relation=ref('anc_outcome_normalized'),
     partition_by='id',
     order_by='_airbyte_emitted_at desc',
    )

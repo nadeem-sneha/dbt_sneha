@@ -7,7 +7,7 @@
 ) }}
 
 {{ dbt_utils.deduplicate(
-    relation=ref('anc_outcomes_normalized'),
+    relation=ref('anc_referral_followup_normalized'),
     partition_by='id',
     order_by='_airbyte_emitted_at desc',
    )

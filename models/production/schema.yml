@@ -5,8 +5,11 @@ models:
   - name: anc_case
     description: "merged model with case and last visit date"
 
-  - name: anc_outcomes
+  - name: anc_outcome
     description: "merged model with case and delivery data"
+    
+  - name: anc_referral_followup
+    description: "merged model with case and referral followup data"
 
   - name: anc_visit_by_month
     description: "Aggregated visits of cases by CO per month"

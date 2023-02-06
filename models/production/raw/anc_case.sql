@@ -26,8 +26,8 @@ SELECT  c.id,
         c.anc_closed,
         c.anc_closereason,
         c.high_risk_preg,
-        form.why_high_risk,
-        form.hb_grade,
+        last_visit.why_high_risk,
+        last_visit.hb_grade,
         c.lmpdate,
         c.edddate,
         c.referral,
@@ -56,13 +56,13 @@ SELECT  c.id,
               when (date_part('months',age(current_date, c.lmpdate))>10 AND c.anc_closed IS NULL) then 'Over-due'
               ELSE 'NA'
         END AS trimester,
-        form.lastvisitdate AS last_anc_visit_date, 
-        current_date-form.lastvisitdate AS days_from_last_visit,
-        form.lastvisitreason,
-        form.last_visit_conducted_by,
+        last_visit.lastvisitdate AS last_anc_visit_date, 
+        current_date-last_visit.lastvisitdate AS days_from_last_visit,
+        last_visit.lastvisitreason,
+        last_visit.last_visit_conducted_by,
         CASE 
-              when (extract(month FROM form.lastvisitdate) = extract(month from current_date))
-               AND (extract(year FROM form.lastvisitdate) = extract(year from current_date)) 
+              when (extract(month FROM last_visit.lastvisitdate) = extract(month from current_date))
+               AND (extract(year FROM last_visit.lastvisitdate) = extract(year from current_date)) 
                then 'Visited' 
                ELSE 'Not Yet Visited' 
         END AS currentmonthvisitStatus
@@ -70,5 +70,5 @@ SELECT  c.id,
 
 FROM {{ref('anc_case_duplicates_removed')}} AS c
 LEFT JOIN
-(select caseid,visitdate AS lastvisitdate,conducted_by AS last_visit_conducted_by, visitreason AS lastvisitreason,why_high_risk,hb_grade from ordered_visits where ov=1 ) AS form 
-ON form.caseid = c.id
+(select caseid,visitdate AS lastvisitdate,conducted_by AS last_visit_conducted_by, visitreason AS lastvisitreason,why_high_risk,hb_grade from ordered_visits where ov=1 ) AS last_visit 
+ON last_visit.caseid = c.id
