@@ -11,5 +11,8 @@ models:
   - name: anc_referral_followup
     description: "merged model with case and referral followup data"
 
+  - name: anc_visit
+    description: " ANC visits of cases"
+
   - name: anc_visit_by_month
     description: "Aggregated visits of cases by CO per month"

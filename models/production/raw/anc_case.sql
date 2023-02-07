@@ -2,9 +2,16 @@
   materialized='table'
 ) }}
 
+-- use rank to get the last visit
 WITH ordered_visits AS (
   SELECT visits.*, ROW_NUMBER() OVER (PARTITION BY caseid ORDER BY visitdate DESC) AS ov
   FROM {{ref('anc_visit_duplicates_removed')}} AS visits 
+),
+-- get last visit with non null hbgrade
+ordered_visits_hb_grade AS (
+  SELECT visits.*, ROW_NUMBER() OVER (PARTITION BY caseid ORDER BY visitdate DESC) AS ov
+  FROM {{ref('anc_visit_duplicates_removed')}} AS visits 
+  WHERE visits.hb_grade IS NOT NULL
 )
 
 
@@ -27,7 +34,7 @@ SELECT  c.id,
         c.anc_closereason,
         c.high_risk_preg,
         last_visit.why_high_risk,
-        last_visit.hb_grade,
+        last_non_null_hb_grade_visit.hb_grade,
         c.lmpdate,
         c.edddate,
         c.referral,
@@ -72,3 +79,6 @@ FROM {{ref('anc_case_duplicates_removed')}} AS c
 LEFT JOIN
 (select caseid,visitdate AS lastvisitdate,conducted_by AS last_visit_conducted_by, visitreason AS lastvisitreason,why_high_risk,hb_grade from ordered_visits where ov=1 ) AS last_visit 
 ON last_visit.caseid = c.id
+LEFT JOIN
+(select caseid, hb_grade from ordered_visits_hb_grade where ov=1) as last_non_null_hb_grade_visit
+ON last_non_null_hb_grade_visit.caseid=c.id
