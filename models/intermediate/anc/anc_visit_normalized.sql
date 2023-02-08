@@ -4,16 +4,15 @@
       {'columns': ['_airbyte_ab_id'], 'type': 'hash'}
     ],
     schema='intermediate'
-
 ) }}
 
 select (_airbyte_data -> 'form' ->> 'visitreason') as visitreason,
 (_airbyte_data -> 'form' ->> 'hvconduct') as conducted_by, 
 (_airbyte_data ->> 'id') as id,
 (_airbyte_data -> 'form' ->> 'why_high_risk') as why_high_risk,
-COALESCE(_airbyte_data -> 'form' -> 'hbtrim3'->> 'gradetrim3',
-_airbyte_data -> 'form' -> 'hbtrim2'->> 'gradetrim2',
-_airbyte_data -> 'form' -> 'hbtrim1'->> 'gradetrim1') as hb_grade,
+COALESCE(NULLIF(_airbyte_data -> 'form' -> 'hbtrim3'->> 'gradetrim3',''),
+NULLIF(_airbyte_data -> 'form' -> 'hbtrim2'->> 'gradetrim2',''),
+NULLIF(_airbyte_data -> 'form' -> 'hbtrim1'->> 'gradetrim1','') as hb_grade,
 date(NULLIF(_airbyte_data -> 'form' ->> 'visitdate','')) as visitdate, 
 _airbyte_data -> 'form' ->> 'load_person_case_id' as caseid,
 _airbyte_ab_id,
