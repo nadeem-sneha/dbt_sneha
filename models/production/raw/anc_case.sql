@@ -12,8 +12,13 @@ ordered_visits_hb_grade AS (
   SELECT visits.*, ROW_NUMBER() OVER (PARTITION BY caseid ORDER BY visitdate DESC) AS ov
   FROM {{ref('anc_visit_duplicates_removed')}} AS visits 
   WHERE visits.hb_grade IS NOT NULL
+),
+-- get last visit with non null why high risk reason
+ordered_visits_why_high_risk AS (
+  SELECT visits.*, ROW_NUMBER() OVER (PARTITION BY caseid ORDER BY visitdate DESC) AS ov
+  FROM {{ref('anc_visit_duplicates_removed')}} AS visits 
+  WHERE visits.why_high_risk IS NOT NULL
 )
-
 
 SELECT  c.id,
         c.womanname,
@@ -33,7 +38,7 @@ SELECT  c.id,
         c.anc_closed,
         c.anc_closereason,
         c.high_risk_preg,
-        last_visit.why_high_risk,
+        last_non_null_why_high_risk_visit.why_high_risk,
         last_non_null_hb_grade_visit.hb_grade,
         c.lmpdate,
         c.edddate,
@@ -77,3 +82,6 @@ ON last_visit.caseid = c.id
 LEFT JOIN
 (select caseid, hb_grade from ordered_visits_hb_grade where ov=1) as last_non_null_hb_grade_visit
 ON last_non_null_hb_grade_visit.caseid=c.id
+LEFT JOIN 
+(select caseid, why_high_risk from ordered_visits_why_high_risk where ov=1) as last_non_null_why_high_risk_visit
+ON last_non_null_why_high_risk_visit.caseid=c.id
