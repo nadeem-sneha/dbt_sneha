@@ -6,18 +6,25 @@
 WITH ordered_visits AS (
   SELECT visits.*, ROW_NUMBER() OVER (PARTITION BY caseid ORDER BY visitdate DESC) AS ov
   FROM {{ref('anc_visit_duplicates_removed')}} AS visits 
+  WHERE visits.visitreason='ANC'
 ),
 -- get last visit with non null hbgrade
 ordered_visits_hb_grade AS (
   SELECT visits.*, ROW_NUMBER() OVER (PARTITION BY caseid ORDER BY visitdate DESC) AS ov
   FROM {{ref('anc_visit_duplicates_removed')}} AS visits 
-  WHERE visits.hb_grade IS NOT NULL
+  WHERE visits.hb_grade IS NOT NULL AND visits.visitreason='ANC'
 ),
 -- get last visit with non null why high risk reason
 ordered_visits_why_high_risk AS (
   SELECT visits.*, ROW_NUMBER() OVER (PARTITION BY caseid ORDER BY visitdate DESC) AS ov
   FROM {{ref('anc_visit_duplicates_removed')}} AS visits 
-  WHERE visits.why_high_risk IS NOT NULL
+  WHERE (visits.why_high_risk IS NOT NULL) AND (visits.visitreason='ANC')
+),
+-- get visit with anc close as visit reason to find visit date and use as anc close date
+visit_anc_close AS (
+  SELECT visit.caseid,visit.visitdate
+  FROM {{ref('anc_visit_duplicates_removed')}} AS visit
+  WHERE visit.visitreason='Close_case'
 )
 
 SELECT  c.id,
@@ -43,6 +50,8 @@ SELECT  c.id,
         c.lmpdate,
         c.edddate,
         c.gravida_count,
+        c.anc_identify_date,
+        visit_anc_close.visitdate AS anc_close_date,
         c.anc_closereason as pregoutcome,
         c.delivery_date,
         c.delivery_site,
@@ -54,7 +63,7 @@ SELECT  c.id,
         c.individual_category,
         c.service_registration,
         c.case_opened_date,
-        c.anc_identify_date,
+        
         date_part('months',age(current_date, c.lmpdate)) AS pregnantmonth,
         CASE 
               when (date_part('months',age(current_date, c.lmpdate))>=0 AND date_part('months',age(current_date, c.lmpdate))<=3 AND c.anc_closed IS NULL )then 'First trimester'
@@ -74,7 +83,6 @@ SELECT  c.id,
                ELSE 'Not Yet Visited' 
         END AS currentmonthvisitStatus
 
-
 FROM {{ref('anc_case_duplicates_removed')}} AS c
 LEFT JOIN
 (select caseid,visitdate AS lastvisitdate,conducted_by AS last_visit_conducted_by, visitreason AS lastvisitreason,why_high_risk,hb_grade from ordered_visits where ov=1 ) AS last_visit 
@@ -85,3 +93,6 @@ ON last_non_null_hb_grade_visit.caseid=c.id
 LEFT JOIN 
 (select caseid, why_high_risk from ordered_visits_why_high_risk where ov=1) as last_non_null_why_high_risk_visit
 ON last_non_null_why_high_risk_visit.caseid=c.id
+LEFT JOIN
+visit_anc_close
+ON visit_anc_close.caseid=c.id

@@ -16,3 +16,6 @@ models:
 
   - name: anc_visit_by_month
     description: "Aggregated visits of cases by CO per month"
+
+  - name: anc_metrics
+    description: "Metrics/KPIs"
