@@ -19,3 +19,6 @@ models:
 
   - name: anc_metrics
     description: "Metrics/KPIs"
+
+  - name: anc_metrics_ben_count_grouped
+    description: "Metric/KPI of beneficiary count grouped by trimester and cluster"

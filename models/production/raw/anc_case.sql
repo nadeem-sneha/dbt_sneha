@@ -44,13 +44,14 @@ SELECT  c.id,
         c.anc_reg,
         c.anc_closed,
         c.anc_closereason,
+        -- pull identify date frpom registration data
+        r.anc_identify_date,
         c.high_risk_preg,
         last_non_null_why_high_risk_visit.why_high_risk,
         last_non_null_hb_grade_visit.hb_grade,
         c.lmpdate,
         c.edddate,
         c.gravida_count,
-        c.anc_identify_date,
         visit_anc_close.visitdate AS anc_close_date,
         c.anc_closereason as pregoutcome,
         c.delivery_date,
@@ -63,7 +64,7 @@ SELECT  c.id,
         c.individual_category,
         c.service_registration,
         c.case_opened_date,
-        
+        c.date_closed,        
         date_part('months',age(current_date, c.lmpdate)) AS pregnantmonth,
         CASE 
               when (date_part('months',age(current_date, c.lmpdate))>=0 AND date_part('months',age(current_date, c.lmpdate))<=3 AND c.anc_closed IS NULL )then 'First trimester'
@@ -96,3 +97,6 @@ ON last_non_null_why_high_risk_visit.caseid=c.id
 LEFT JOIN
 visit_anc_close
 ON visit_anc_close.caseid=c.id
+LEFT JOIN 
+{{ref('anc_registration_duplicates_removed')}}r
+ON r.caseid=c.id

@@ -31,6 +31,16 @@ models:
            - unique
            - not_null
 
+  - name: anc_registration_normalized
+    description: "Normalized data of ANC Registrations" 
+    +schema: intermediate
+    columns: 
+       - name: _airbyte_ab_id
+         description: "The primary key for this table"
+         tests:
+           - unique
+           - not_null
+
   - name: anc_case_normalized
     description: "Normalized model of ANC cases" 
     +schema: intermediate
@@ -64,6 +74,16 @@ models:
     +schema: intermediate
     columns: 
        - name: id
+         description: "The primary key for this table"
+         tests:
+           - unique
+           - not_null
+
+  - name: anc_registration_duplicates_removed
+    description: "Deduped data of ANC Registrations" 
+    +schema: intermediate
+    columns: 
+       - name: _airbyte_ab_id
          description: "The primary key for this table"
          tests:
            - unique
