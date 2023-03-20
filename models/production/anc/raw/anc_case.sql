@@ -9,10 +9,22 @@ WITH ordered_visits AS (
   WHERE visits.visitreason='ANC'
 ),
 -- get last visit with non null hbgrade
-ordered_visits_hb_grade AS (
+ordered_visits_hb_grade_last AS (
   SELECT visits.*, ROW_NUMBER() OVER (PARTITION BY caseid ORDER BY visitdate DESC) AS ov
   FROM {{ref('anc_visit_duplicates_removed')}} AS visits 
   WHERE visits.hb_grade IS NOT NULL AND visits.visitreason='ANC'
+),
+-- get earliest visit with non null hbgrade
+ordered_visits_hb_grade_earliest AS (
+  SELECT visits.*, ROW_NUMBER() OVER (PARTITION BY caseid ORDER BY visitdate ASC) AS ov
+  FROM {{ref('anc_visit_duplicates_removed')}} AS visits 
+  WHERE visits.hb_grade IS NOT NULL AND visits.visitreason='ANC'
+),
+-- get last visit with non null anc_reg_trimester
+ordered_visits_anc_reg_trimester AS (
+  SELECT visits.*, ROW_NUMBER() OVER (PARTITION BY caseid ORDER BY visitdate DESC) AS ov
+  FROM {{ref('anc_visit_duplicates_removed')}} AS visits 
+  WHERE visits.anc_reg_trimester IS NOT NULL AND visits.visitreason='ANC'
 ),
 -- get last visit with non null why high risk reason
 ordered_visits_why_high_risk AS (
@@ -41,14 +53,19 @@ SELECT  c.id,
         c.aww_number,
         c.closed,
         c.anc_enrolled,
-        c.anc_reg,
-        c.anc_closed,
-        c.anc_closereason,
         -- pull identify date frpom registration data
         r.anc_identify_date,
+        -- pull anc registration data from visit
+        last_non_null_anc_reg_trimester_visit.anc_reg,
+        last_non_null_anc_reg_trimester_visit.anc_reg_trimester,
+        c.anc_closed,
+        c.anc_closereason,
         c.high_risk_preg,
         last_non_null_why_high_risk_visit.why_high_risk,
         last_non_null_hb_grade_visit.hb_grade,
+        last_non_null_hb_grade_visit.hb_grade_date,
+        earliest_non_null_hb_grade_visit.earliest_hb_grade,
+        earliest_non_null_hb_grade_visit.earliest_hb_grade_date,
         c.lmpdate,
         c.edddate,
         c.gravida_count,
@@ -86,14 +103,20 @@ SELECT  c.id,
 
 FROM {{ref('anc_case_duplicates_removed')}} AS c
 LEFT JOIN
-(select caseid,visitdate AS lastvisitdate,conducted_by AS last_visit_conducted_by, visitreason AS lastvisitreason,why_high_risk,hb_grade from ordered_visits where ov=1 ) AS last_visit 
-ON last_visit.caseid = c.id
+(select caseid, visitdate AS lastvisitdate,conducted_by AS last_visit_conducted_by, visitreason AS lastvisitreason,why_high_risk,hb_grade from ordered_visits where ov=1 ) AS last_visit 
+ON last_visit.caseid = c.id AND last_visit.lastvisitdate > c.lmpdate
 LEFT JOIN
-(select caseid, hb_grade from ordered_visits_hb_grade where ov=1) as last_non_null_hb_grade_visit
-ON last_non_null_hb_grade_visit.caseid=c.id
+(select caseid, anc_reg, anc_reg_trimester,visitdate from ordered_visits_anc_reg_trimester where ov=1) as last_non_null_anc_reg_trimester_visit
+ON last_non_null_anc_reg_trimester_visit.caseid=c.id AND last_non_null_anc_reg_trimester_visit.visitdate > c.lmpdate
+LEFT JOIN
+(select caseid, hb_grade,visitdate AS hb_grade_date from ordered_visits_hb_grade_last where ov=1) as last_non_null_hb_grade_visit
+ON last_non_null_hb_grade_visit.caseid=c.id AND last_non_null_hb_grade_visit.hb_grade_date > c.lmpdate
 LEFT JOIN 
-(select caseid, why_high_risk from ordered_visits_why_high_risk where ov=1) as last_non_null_why_high_risk_visit
-ON last_non_null_why_high_risk_visit.caseid=c.id
+(select caseid, hb_grade AS earliest_hb_grade,visitdate AS earliest_hb_grade_date from ordered_visits_hb_grade_earliest where ov=1) as earliest_non_null_hb_grade_visit
+ON earliest_non_null_hb_grade_visit.caseid=c.id AND earliest_non_null_hb_grade_visit.earliest_hb_grade_date > c.lmpdate
+LEFT JOIN
+(select caseid, why_high_risk,visitdate from ordered_visits_why_high_risk where ov=1) as last_non_null_why_high_risk_visit
+ON last_non_null_why_high_risk_visit.caseid=c.id AND last_non_null_why_high_risk_visit.visitdate > c.lmpdate
 LEFT JOIN
 visit_anc_close
 ON visit_anc_close.caseid=c.id

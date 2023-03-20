@@ -23,5 +23,4 @@ from {{ source('commcare_anc', 'raw_anc_visit') }}
 where (_airbyte_data -> 'form' ->> 'visitreason') = 'Delivery_information' 
 AND (_airbyte_data ->> 'archived')::boolean = false
 /*remove test data */
-AND  (_airbyte_data -> 'form' ->> 'coid') NOT IN ('00','001') 
-AND  (_airbyte_data -> 'form' ->> 'coid') <> ''
+AND (_airbyte_data -> 'form' ->> 'womanname') NOT LIKE '%Demo%'

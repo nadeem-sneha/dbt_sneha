@@ -1,0 +1,12 @@
+version: 2
+
+models: 
+
+  - name: volunteer_case
+    description: "volunteer case model "
+    columns:
+      - name: id
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null

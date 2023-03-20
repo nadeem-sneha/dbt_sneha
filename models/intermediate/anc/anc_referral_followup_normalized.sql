@@ -31,4 +31,4 @@ from {{ source('commcare_anc', 'raw_case') }}
 where (_airbyte_data -> 'properties' ->> 'case_type') = 'sneharefollwuptemp'
 AND (_airbyte_data -> 'properties' ->> 'referralcategory') = 'ANC/PNC' 
 /*remove test data */
-AND ((_airbyte_data -> 'properties' ->> 'womanname') NOT LIKE '%Demo%')
+AND (_airbyte_data -> 'properties' ->> 'womanname') NOT LIKE '%Demo%'
