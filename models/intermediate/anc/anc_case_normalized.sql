@@ -48,4 +48,6 @@ where (_airbyte_data -> 'properties' ->> 'case_type') = 'case'
 AND (_airbyte_data -> 'properties' ->> 'individual_category') = 'mwra'
 AND (_airbyte_data -> 'properties' ->> 'anc_enrolled' IS NOT NULL)
 /*removing test cases */
-AND (_airbyte_data -> 'properties' ->> 'womanname') NOT LIKE '%Demo%'
+AND ((_airbyte_data -> 'properties' ->> 'womanname') NOT LIKE '%Demo%'
+OR (_airbyte_data -> 'properties' ->> 'womanname') NOT LIKE '%dummy%'
+OR (_airbyte_data -> 'properties' ->> 'womanname') NOT LIKE '%error%')
