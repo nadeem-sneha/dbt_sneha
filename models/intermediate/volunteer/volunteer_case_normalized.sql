@@ -33,3 +33,7 @@ where (_airbyte_data -> 'properties' ->> 'case_type') = 'case'
 AND (_airbyte_data -> 'properties' ->> 'individual_category') = 'volunteer'
 /*removing test cases */
 AND (_airbyte_data -> 'properties' ->> 'person_name') NOT LIKE '%Demo%'
+/* remove incorrect screened case data */
+AND  (_airbyte_data ->> 'id') NOT IN 
+(select caseid from {{ref('incorrectly_screened_case_duplicates_removed')}})
+

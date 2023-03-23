@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: incorrectly_screened_case
+    description: "Normalized model of Volunteers" 
+    +schema: intermediate
+    columns: 
+       - name: _airbyte_ab_id
+         description: "The primary key for this table"
+         tests:
+           - unique
+           - not_null 
+
+  - name: incorrectly_screened_case_duplicates_removed
+    description: "Deduped model for ANC cases"
+    columns:
+      - name: caseid
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null

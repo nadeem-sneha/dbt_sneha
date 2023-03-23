@@ -51,3 +51,7 @@ AND (_airbyte_data -> 'properties' ->> 'anc_enrolled' IS NOT NULL)
 AND ((_airbyte_data -> 'properties' ->> 'womanname') NOT LIKE '%Demo%'
 OR (_airbyte_data -> 'properties' ->> 'womanname') NOT LIKE '%dummy%'
 OR (_airbyte_data -> 'properties' ->> 'womanname') NOT LIKE '%error%')
+/* remove incorrect screened case data */
+AND  (_airbyte_data ->> 'id') NOT IN 
+(select caseid from {{ref('incorrectly_screened_case_duplicates_removed')}})
+

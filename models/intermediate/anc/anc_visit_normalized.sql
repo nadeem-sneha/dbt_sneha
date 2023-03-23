@@ -26,4 +26,9 @@ from {{ source('commcare_anc', 'raw_anc_visit') }}
 where (_airbyte_data -> 'form' ->> 'visitreason') = 'ANC' OR (_airbyte_data -> 'form' ->> 'visitreason') = 'Close_case'
 AND (_airbyte_data ->> 'archived')::boolean = false
 /*remove test data */
-AND (_airbyte_data -> 'form' ->> 'womanname') NOT LIKE '%Demo%'
+AND ((_airbyte_data -> 'form' ->> 'womanname') NOT LIKE '%Demo%'
+OR (_airbyte_data -> 'form' ->> 'womanname') NOT LIKE '%dummy%'
+OR (_airbyte_data -> 'form' ->> 'womanname') NOT LIKE '%error%')
+/* remove incorrect screened case data */
+AND  (_airbyte_data -> 'form' ->> 'load_person_case_id') NOT IN 
+(select caseid from {{ref('incorrectly_screened_case_duplicates_removed')}})

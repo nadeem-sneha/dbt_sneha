@@ -13,6 +13,9 @@ sources:
       - name: raw_referral_followup
         identifier: _airbyte_raw_referral_followup
         description: Referral followup data
+      - name: raw_update_remove_member
+        identifier: _airbyte_raw_update_or_remove_member
+        description: Removal of member data to exclude incorrectly screened cases
       - name: raw_case
         identifier: _airbyte_raw_zzz_case
         description: Cases across entire Commcare application for form streams synced through airbyte
