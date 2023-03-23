@@ -45,12 +45,13 @@ GROUP BY month_start_date),
 
 -- volunteer count
 -- determine volunteer open count for each month
-volunteers_open AS (SELECT calendar.month_start_date, count(v.id) AS volunteers_open_count
+volunteers_open AS (SELECT calendar.month_start_date, count(distinct v.id) AS volunteers_open_count
 FROM calendar
 CROSS JOIN  
 (SELECT id, case_opened_date,date_closed,sex FROM {{ref('volunteer_case')}}) v
-WHERE ((v.case_opened_date <= calendar.month_end_date) AND
-((v.date_closed>calendar.month_end_date)OR (v.date_closed IS NULL)))
+WHERE ((v.case_opened_date <= calendar.month_end_date) 
+AND ((v.date_closed>calendar.month_end_date)OR (v.date_closed IS NULL))
+AND v.sex ='female')
 GROUP BY calendar.month_start_date),
 
 
