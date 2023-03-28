@@ -5,6 +5,9 @@ models:
   - name: anc_case
     description: "merged model with case and last visit date"
 
+  - name: anc_case_open
+    description: "date spined case model giving status for each month the case is open"
+
   - name: anc_outcome
     description: "merged model with case and delivery data"
     
@@ -18,7 +21,519 @@ models:
     description: "Aggregated visits of cases by CO per month"
 
   - name: anc_metrics
-    description: "Metrics/KPIs"
+    description: "Metrics"
+
+  - name: anc_metrics_calculated
+    description: "Percentage Metrics/KPIs"
+
+  - name: anc_metrics_pct_calculated
+    description: "Percentage Metrics/KPIs"
 
   - name: anc_metrics_ben_count_grouped
     description: "Metric/KPI of beneficiary count grouped by trimester and cluster"
+
+metrics:
+  - name: open_case_count
+    label: Open Cases Count
+    model: ref('anc_case_open')
+    description: "The count of all open cases"
+
+    calculation_method: count_distinct
+    expression: id
+
+    timestamp: month_start_date
+    time_grains: [month, quarter, year]
+
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+      - trimester
+
+    filters:
+      - field: open_status
+        operator: 'is'
+        value: 'true'
+
+  - name: anemia_tested_count
+    label: Anemia Tested Count among open cases
+    model: ref('anc_case_open')
+    description: "The count of all open cases that have been tested for anemia"
+
+    calculation_method: count_distinct
+    expression: id
+
+    timestamp: month_start_date
+    time_grains: [month, quarter, year]
+
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+      - trimester
+
+    filters:
+      - field: open_status
+        operator: 'is'
+        value: 'true'
+      - field: anemia_tested_status
+        operator: 'is'
+        value: 'true'  
+
+  - name: early_registration_count
+    label: Early registration among open cases
+    model: ref('anc_case_open')
+    description: "The count of all open cases that have registered early in hospitals"
+
+    calculation_method: count_distinct
+    expression: id
+
+    timestamp: month_start_date
+    time_grains: [month, quarter, year]
+
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+      - trimester
+
+    filters:
+      - field: open_status
+        operator: 'is'
+        value: 'true'
+      - field: anc_reg_trimester
+        operator: '='
+        value: "'First_trim'"
+
+  - name: total_visits_count
+    label: Total visits count
+    model: ref('anc_visit')
+    description: "The count of all visits "
+
+    calculation_method: count_distinct
+    expression: caseid
+
+    timestamp: month_start_date
+    time_grains: [month, quarter, year]
+
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+
+    filters:
+      - field: visitreason
+        operator: '='
+        value: "'ANC'"
+
+  - name: co_visits_count   
+    label: CO visits count
+    model: ref('anc_visit')
+    description: "The count of all CO visits "
+
+    calculation_method: count_distinct
+    expression: caseid
+
+    timestamp: month_start_date
+    time_grains: [month, quarter, year]
+
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+
+    filters:
+      - field: visitreason
+        operator: '='
+        value: "'ANC'"
+      - field: conducted_by
+        operator: '='
+        value: "'co'"
+
+  - name: volunteer_visits_count  
+    label: Volunteer visits count
+    model: ref('anc_visit')
+    description: "The count of all volunteer visits "
+
+    calculation_method: count_distinct
+    expression: caseid
+
+    timestamp: month_start_date
+    time_grains: [month, quarter, year]
+
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+
+    filters:
+      - field: visitreason
+        operator: '='
+        value: "'ANC'"
+      - field: conducted_by
+        operator: '='
+        value: "'volunteer'"
+
+  - name: volunteer_open_count
+    label: Total Volunteer count
+    model: ref('volunteer_open_case')
+    description: "The count of all volunteers"
+
+    calculation_method: count_distinct
+    expression: id
+
+    timestamp: month_start_date
+    time_grains: [month, quarter, year]
+
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+
+    filters:
+      - field: sex
+        operator: '='
+        value: "'female'"
+
+  - name: volunteers_involved_in_anc_referral_count
+    label: Volunteer count who are referring
+    model: ref('anc_visit')
+    description: "The count of all volunteers referring for anc services"
+
+    calculation_method: count_distinct
+    expression: volunteerid
+
+    timestamp: month_start_date
+    time_grains: [month, quarter, year]
+
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+
+    filters:
+      - field: visitreason
+        operator: '='
+        value: "'ANC'"
+      - field: conducted_by
+        operator: '='
+        value: "'volunteer'"
+      - field: referral
+        operator: '='
+        value: "'Yes'"
+      - field: referral_reasons
+        operator: 'LIKE'
+        value: "'%anc_%'"
+      - field: referral_reasons
+        operator: 'NOT LIKE'
+        value: "'%anc_danger%'"
+
+  - name: volunteer_referral_count   
+    label: Volunteer referral count
+    model: ref('anc_visit')
+    description: "The count of all volunteer visits with referrals"
+
+    calculation_method: count_distinct
+    expression: caseid
+
+    timestamp: month_start_date
+    time_grains: [month, quarter, year]
+
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+
+    filters:
+      - field: visitreason
+        operator: '='
+        value: "'ANC'"
+      - field: conducted_by
+        operator: '='
+        value: "'volunteer'"
+      - field: referral
+        operator: '='
+        value: "'Yes'"
+
+  - name: co_referral_count   
+    label:  CO referral count
+    model: ref('anc_visit')
+    description: "The count of all CO visits with referrals"
+
+    calculation_method: count_distinct
+    expression: caseid
+
+    timestamp: month_start_date
+    time_grains: [month, quarter, year]
+
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+
+    filters:
+      - field: visitreason
+        operator: '='
+        value: "'ANC'"
+      - field: conducted_by
+        operator: '='
+        value: "'co'"
+      - field: referral
+        operator: '='
+        value: "'Yes'"
+
+
+  - name: thr_referral_count   
+    label:  THR referral count
+    model: ref('anc_visit')
+    description: "The count of all  visits with THR referrals"
+
+    calculation_method: count_distinct
+    expression: caseid
+
+    timestamp: month_start_date
+    time_grains: [month, quarter, year]
+
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+
+    filters:
+      - field: visitreason
+        operator: '='
+        value: "'ANC'"
+      - field: referral
+        operator: '='
+        value: "'Yes'"
+      - field: referral_reasons
+        operator: 'LIKE'
+        value: "'%ICDS_THR%'"
+
+  - name: thr_count   
+    label:  THR  count
+    model: ref('anc_visit')
+    description: "The count of all  visits with THR = Yes"
+
+    calculation_method: count_distinct
+    expression: caseid
+
+    timestamp: month_start_date
+    time_grains: [month, quarter, year]
+
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+
+    filters:
+      - field: visitreason
+        operator: '='
+        value: "'ANC'"
+      - field: ancthr
+        operator: '='
+        value: "'Yes'"
+
+  - name: delivery_count   
+    label:  Delivery count
+    model: ref('anc_outcome')
+    description: "The count of all deliveries"
+
+    calculation_method: count_distinct
+    expression: caseid
+
+    timestamp: delivery_month
+    time_grains: [month, quarter, year]
+
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+
+    filters:
+      - field: pregoutcome
+        operator: 'IN'
+        value: "('livebirth','stillbirth')"
+
+  - name: institutional_delivery_count   
+    label:  Institutional Delivery count
+    model: ref('anc_outcome')
+    description: "The count of all Institutional deliveries"
+
+    calculation_method: count_distinct
+    expression: caseid
+
+    timestamp: delivery_month
+    time_grains: [month, quarter, year]
+
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+
+    filters:
+      - field: pregoutcome
+        operator: 'IN'
+        value: "('livebirth','stillbirth')"
+      - field: delivery_site_type
+        operator: '='
+        value: "'Institutional'"
+
+
+  - name: pct_total_visits
+    label: Percentage of Total Visits
+    timestamp: month_start_date
+    time_grains: [day, week, month]
+    calculation_method: derived
+    expression: "{{ metric('total_visits_count') }}::float/ {{ metric('open_case_count') }}"
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+
+  - name: pct_co_visits
+    label: Percentage of CO Visits
+    timestamp: month_start_date
+    time_grains: [day, week, month]
+    calculation_method: derived
+    expression: "{{ metric('co_visits_count') }}::float/ {{ metric('open_case_count') }}"
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+
+  - name: pct_volunteer_visits
+    label: Percentage of Volunteer Visits
+    timestamp: month_start_date
+    time_grains: [day, week, month]
+    calculation_method: derived
+    expression: "{{ metric('volunteer_visits_count') }}::float/ {{ metric('open_case_count') }}"
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+
+  - name: pct_volunteer_referral_visits
+    label: Percentage of Volunteer Referral Visits
+    timestamp: month_start_date
+    time_grains: [day, week, month]
+    calculation_method: derived
+    expression: "{{ metric('volunteer_referral_count') }}::float/ {{ metric('open_case_count') }}"
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+
+  - name: pct_co_referral_visits
+    label: Percentage of CO Referral Visits
+    timestamp: month_start_date
+    time_grains: [day, week, month]
+    calculation_method: derived
+    expression: "{{ metric('co_referral_count') }}::float/ {{ metric('open_case_count') }}"
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+
+  - name: pct_volunteers_involved_in_anc_referral_count
+    label: Percentage of Volunteers referring
+    timestamp: month_start_date
+    time_grains: [day, week, month]
+    calculation_method: derived
+    expression: "{{ metric('volunteers_involved_in_anc_referral_count') }}::float/ {{ metric('volunteer_open_count') }}"
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+
+  - name: pct_thr_referral
+    label: Percentage of THR Referral
+    timestamp: month_start_date
+    time_grains: [day, week, month]
+    calculation_method: derived
+    expression: "{{ metric('thr_referral_count') }}::float/ {{ metric('open_case_count') }}"
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number
+
+  - name: pct_thr_visits
+    label: Percentage of THR Referral
+    timestamp: month_start_date
+    time_grains: [day, week, month]
+    calculation_method: derived
+    expression: "{{ metric('thr_count') }}::float/ {{ metric('open_case_count') }}"
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number 
+
+  - name: pct_institutional_delivery
+    label: Percentage of Institutional Delivery
+    timestamp: month_start_date
+    time_grains: [day, week, month]
+    calculation_method: derived
+    expression: "{{ metric('institutional_delivery_count') }}::float/ {{ metric('delivery_count') }}"
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number 
+
+  - name: pct_institutional_delivery
+    label: Percentage of Institutional Delivery
+    timestamp: month_start_date
+    time_grains: [day, week, month]
+    calculation_method: derived
+    expression: "{{ metric('institutional_delivery_count') }}::float/ {{ metric('delivery_count') }}"
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number 
+  
+  - name: pct_anemia_tested
+    label: Percentage of Open Cases Anemia Tested
+    timestamp: month_start_date
+    time_grains: [day, week, month]
+    calculation_method: derived
+    expression: "{{ metric('anemia_tested_count') }}::float/ {{ metric('open_case_count') }}"
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number 
+
+  - name: pct_early_registration
+    label: Percentage of Early registrations
+    timestamp: month_start_date
+    time_grains: [day, week, month]
+    calculation_method: derived
+    expression: "{{ metric('early_registration_count') }}::float/ {{ metric('open_case_count') }}"
+    dimensions:
+      - program_code
+      - clustername
+      - coid
+      - aww_number 

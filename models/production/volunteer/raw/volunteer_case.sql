@@ -3,4 +3,4 @@
 ) }}
 
 SELECT *
-FROM {{ref('volunteer_case_duplicates_removed')}} 
+FROM {{ref('volunteer_case_normalized')}} 

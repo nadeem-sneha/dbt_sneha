@@ -5,37 +5,37 @@
 -- use rank to get the last visit
 WITH ordered_visits AS (
   SELECT visits.*, ROW_NUMBER() OVER (PARTITION BY caseid ORDER BY visitdate DESC) AS ov
-  FROM {{ref('anc_visit_duplicates_removed')}} AS visits 
+  FROM {{ref('anc_visit_normalized')}} AS visits 
   WHERE visits.visitreason='ANC'
 ),
 -- get last visit with non null hbgrade
 ordered_visits_hb_grade_last AS (
   SELECT visits.*, ROW_NUMBER() OVER (PARTITION BY caseid ORDER BY visitdate DESC) AS ov
-  FROM {{ref('anc_visit_duplicates_removed')}} AS visits 
+  FROM {{ref('anc_visit_normalized')}} AS visits 
   WHERE visits.hb_grade IS NOT NULL AND visits.visitreason='ANC'
 ),
 -- get earliest visit with non null hbgrade
 ordered_visits_hb_grade_earliest AS (
   SELECT visits.*, ROW_NUMBER() OVER (PARTITION BY caseid ORDER BY visitdate ASC) AS ov
-  FROM {{ref('anc_visit_duplicates_removed')}} AS visits 
+  FROM {{ref('anc_visit_normalized')}} AS visits 
   WHERE visits.hb_grade IS NOT NULL AND visits.visitreason='ANC'
 ),
 -- get last visit with non null anc_reg_trimester
 ordered_visits_anc_reg_trimester AS (
   SELECT visits.*, ROW_NUMBER() OVER (PARTITION BY caseid ORDER BY visitdate DESC) AS ov
-  FROM {{ref('anc_visit_duplicates_removed')}} AS visits 
+  FROM {{ref('anc_visit_normalized')}} AS visits 
   WHERE visits.anc_reg_trimester IS NOT NULL AND visits.visitreason='ANC'
 ),
 -- get last visit with non null why high risk reason
 ordered_visits_why_high_risk AS (
   SELECT visits.*, ROW_NUMBER() OVER (PARTITION BY caseid ORDER BY visitdate DESC) AS ov
-  FROM {{ref('anc_visit_duplicates_removed')}} AS visits 
+  FROM {{ref('anc_visit_normalized')}} AS visits 
   WHERE (visits.why_high_risk IS NOT NULL) AND (visits.visitreason='ANC')
 ),
 -- get visit with anc close as visit reason to find visit date and use as anc close date
 visit_anc_close AS (
   SELECT visit.caseid,visit.visitdate
-  FROM {{ref('anc_visit_duplicates_removed')}} AS visit
+  FROM {{ref('anc_visit_normalized')}} AS visit
   WHERE visit.visitreason='Close_case'
 )
 
@@ -101,7 +101,7 @@ SELECT  c.id,
                ELSE 'Not Yet Visited' 
         END AS currentmonthvisitStatus
 
-FROM {{ref('anc_case_duplicates_removed')}} AS c
+FROM {{ref('anc_case_normalized')}} AS c
 LEFT JOIN
 (select caseid, visitdate AS lastvisitdate,conducted_by AS last_visit_conducted_by, visitreason AS lastvisitreason,why_high_risk,hb_grade from ordered_visits where ov=1 ) AS last_visit 
 ON last_visit.caseid = c.id AND last_visit.lastvisitdate > c.lmpdate
@@ -121,5 +121,5 @@ LEFT JOIN
 visit_anc_close
 ON visit_anc_close.caseid=c.id
 LEFT JOIN 
-{{ref('anc_registration_duplicates_removed')}}r
+{{ref('anc_registration_normalized')}}r
 ON r.caseid=c.id

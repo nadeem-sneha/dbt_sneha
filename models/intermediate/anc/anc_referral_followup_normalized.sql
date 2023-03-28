@@ -7,7 +7,7 @@
 
 ) }}
 
-SELECT 
+with referral_cte as (SELECT 
 _airbyte_data ->> 'id' as id,
 _airbyte_data -> 'properties' ->> 'womanid' as womanid,
 (_airbyte_data -> 'closed')::boolean as referral_closed,
@@ -30,7 +30,15 @@ _airbyte_emitted_at
 from {{ source('commcare_anc', 'raw_case') }}
 where (_airbyte_data -> 'properties' ->> 'case_type') = 'sneharefollwuptemp'
 AND (_airbyte_data -> 'properties' ->> 'referralcategory') = 'ANC/PNC' 
-/*remove test data */
-AND ((_airbyte_data -> 'properties' ->> 'womanname') NOT LIKE '%Demo%'
-OR (_airbyte_data -> 'properties' ->> 'womanname') NOT LIKE '%dummy%'
-OR (_airbyte_data -> 'properties' ->> 'womanname') NOT LIKE '%error%')
+/*removing test cases */
+AND (_airbyte_data -> 'properties' ->> 'womanname') NOT LIKE '%Demo%'
+AND (_airbyte_data -> 'properties' ->> 'womanname') NOT LIKE '%dummy%'
+AND (_airbyte_data -> 'properties' ->> 'womanname') NOT LIKE '%error%'
+)
+
+{{ dbt_utils.deduplicate(
+    relation='referral_cte',
+    partition_by='id',
+    order_by='_airbyte_emitted_at desc',
+   )
+}}

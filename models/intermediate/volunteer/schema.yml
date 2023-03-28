@@ -10,12 +10,3 @@ models:
          tests:
            - unique
            - not_null 
-
-  - name: volunteer_case_duplicates_removed
-    description: "Deduped model for ANC cases"
-    columns:
-      - name: id
-        description: "The primary key for this table"
-        tests:
-          - unique
-          - not_null

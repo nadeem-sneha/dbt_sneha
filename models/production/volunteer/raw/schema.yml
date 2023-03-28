@@ -10,3 +10,12 @@ models:
         tests:
           - unique
           - not_null
+
+  - name: volunteer_open_case
+    description: "volunteer open cases by month "
+    columns:
+      - name: id
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null

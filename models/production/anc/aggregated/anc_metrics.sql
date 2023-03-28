@@ -10,36 +10,30 @@ SELECT d::date as month_start_date,(d + '1 month'::interval - '1 day'::interval 
 FROM generate_series('2022-01-01',  now(), '1 month'::interval)d
 ),
 -- determine anc open count for each month
-anc_open_count AS (SELECT calendar.month_start_date, count(c.id) AS open_count
+anc_open_count AS (SELECT calendar.month_start_date, count(distinct c.id) AS open_count
 FROM calendar
 CROSS JOIN  
 (SELECT id, anc_identify_date,anc_close_date,anc_closed,lmpdate FROM {{ref('anc_case')}}) c 
 WHERE ((c.anc_identify_date <= calendar.month_end_date) AND
 ((c.anc_close_date>calendar.month_end_date)OR (c.anc_close_date IS NULL)))
 GROUP BY calendar.month_start_date),
--- visit data
--- visits_casedata as (SELECT date_trunc('month', visitdate ) AS visit_month, caseid, 
--- case when conducted_by = 'co' then 1 else 0 end AS conducted_by_co,
--- case when conducted_by = 'volunteer' then 1 else 0 end AS conducted_by_volunteer
--- FROM {{ref('anc_visit_duplicates_removed')}}
--- WHERE visitreason='ANC'),
 
 -- total unique visits 
 visits_counts AS (
 SELECT date_trunc('month', visitdate ) AS month_start_date, count(distinct caseid) AS total_count
-FROM {{ref('anc_visit_duplicates_removed')}}
+FROM {{ref('anc_visit_normalized')}}
 WHERE visitreason='ANC'
 GROUP BY month_start_date),
 
 visits_counts_co AS (
 SELECT date_trunc('month', visitdate ) AS month_start_date, count(distinct caseid) AS visit_count_co
-FROM {{ref('anc_visit_duplicates_removed')}}
+FROM {{ref('anc_visit_normalized')}}
 WHERE visitreason='ANC' AND conducted_by='co'
 GROUP BY month_start_date),
 
 visits_counts_volunteer AS (
 SELECT date_trunc('month', visitdate ) AS month_start_date, count(distinct caseid) AS visit_count_volunteer
-FROM {{ref('anc_visit_duplicates_removed')}}
+FROM {{ref('anc_visit_normalized')}}
 WHERE visitreason='ANC' AND conducted_by='volunteer'
 GROUP BY month_start_date),
 
@@ -57,19 +51,19 @@ GROUP BY calendar.month_start_date),
 
 -- volunteer visits with referrals
 volunteer_referrals as (SELECT date_trunc('month', visitdate ) AS month_start_date, count(distinct caseid) as volunteer_referral_count
-FROM {{ref('anc_visit_duplicates_removed')}}
+FROM {{ref('anc_visit_normalized')}}
 WHERE visitreason='ANC' AND referral='Yes' AND conducted_by ='volunteer' AND (referral_reasons LIKE '%anc_reg%' OR referral_reasons LIKE '%anc_service%' )
 GROUP BY month_start_date),
 
 -- co visits with referrals
 co_referrals as (SELECT date_trunc('month', visitdate ) AS month_start_date, count(distinct caseid) as co_referral_count
-FROM {{ref('anc_visit_duplicates_removed')}}
+FROM {{ref('anc_visit_normalized')}}
 WHERE visitreason='ANC' AND referral='Yes' AND conducted_by ='co' AND (referral_reasons LIKE '%anc_reg%' OR referral_reasons LIKE '%anc_service%' )
 GROUP BY month_start_date),
 
 -- visits with THR referrals
 thr_referrals as (SELECT date_trunc('month', visitdate ) AS month_start_date, count(distinct caseid) as thr_referral_count
-FROM {{ref('anc_visit_duplicates_removed')}}
+FROM {{ref('anc_visit_normalized')}}
 WHERE visitreason='ANC' AND referral='Yes'  AND (referral_reasons LIKE '%ICDS_THR%' )
 GROUP BY month_start_date),
 
@@ -103,7 +97,7 @@ GROUP BY month_start_date),
 
 --  visits with THR
 thr_visits as (SELECT date_trunc('month', visitdate ) AS month_start_date, count(distinct caseid) as thr_count
-FROM {{ref('anc_visit_duplicates_removed')}}
+FROM {{ref('anc_visit_normalized')}}
 WHERE visitreason='ANC' AND ancthr ='Yes' 
 GROUP BY month_start_date)
 

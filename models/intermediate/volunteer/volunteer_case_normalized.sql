@@ -7,7 +7,7 @@
 
 ) }}
 
-select
+with vol_cte as (select
         _airbyte_ab_id,
         _airbyte_emitted_at,
         _airbyte_data ->> 'id' as id,
@@ -37,5 +37,11 @@ AND (_airbyte_data -> 'properties' ->> 'person_name') NOT LIKE '%dummy%'
 AND (_airbyte_data -> 'properties' ->> 'person_name') NOT LIKE '%error%'
 /* remove incorrect screened case data */
 AND  (_airbyte_data ->> 'id') NOT IN 
-(select caseid from {{ref('incorrectly_screened_case_duplicates_removed')}})
+(select caseid from {{ref('incorrectly_screened_case_normalized')}}))
 
+{{ dbt_utils.deduplicate(
+    relation='vol_cte',
+    partition_by='id',
+    order_by='_airbyte_emitted_at desc',
+   )
+}}

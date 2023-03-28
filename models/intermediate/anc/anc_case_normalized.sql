@@ -7,7 +7,7 @@
 
 ) }}
 
-select
+with case_cte as (select
         _airbyte_ab_id,
         _airbyte_emitted_at,
         _airbyte_data ->> 'id' as id,
@@ -48,10 +48,16 @@ where (_airbyte_data -> 'properties' ->> 'case_type') = 'case'
 AND (_airbyte_data -> 'properties' ->> 'individual_category') = 'mwra'
 AND (_airbyte_data -> 'properties' ->> 'anc_enrolled' IS NOT NULL)
 /*removing test cases */
-AND ((_airbyte_data -> 'properties' ->> 'womanname') NOT LIKE '%Demo%'
-OR (_airbyte_data -> 'properties' ->> 'womanname') NOT LIKE '%dummy%'
-OR (_airbyte_data -> 'properties' ->> 'womanname') NOT LIKE '%error%')
+AND (_airbyte_data -> 'properties' ->> 'person_name') NOT LIKE '%Demo%'
+AND (_airbyte_data -> 'properties' ->> 'person_name') NOT LIKE '%dummy%'
+AND (_airbyte_data -> 'properties' ->> 'person_name') NOT LIKE '%error%'
 /* remove incorrect screened case data */
 AND  (_airbyte_data ->> 'id') NOT IN 
-(select caseid from {{ref('incorrectly_screened_case_duplicates_removed')}})
+(select caseid from {{ref('incorrectly_screened_case_normalized')}}))
 
+{{ dbt_utils.deduplicate(
+    relation='case_cte',
+    partition_by='id',
+    order_by='_airbyte_emitted_at desc',
+   )
+}}
