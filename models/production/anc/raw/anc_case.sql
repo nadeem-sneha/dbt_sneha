@@ -32,11 +32,11 @@ ordered_visits_why_high_risk AS (
   FROM {{ref('anc_visit_normalized')}} AS visits 
   WHERE (visits.why_high_risk IS NOT NULL) AND (visits.visitreason='ANC')
 ),
--- get visit with anc close as visit reason to find visit date and use as anc close date
-visit_anc_close AS (
-  SELECT visit.caseid,visit.visitdate
-  FROM {{ref('anc_visit_normalized')}} AS visit
-  WHERE visit.visitreason='Close_case'
+-- get visit with last anc close as visit reason to find visit date and use as anc close date
+ordered_visits_anc_close AS (
+  SELECT visits.*, ROW_NUMBER() OVER (PARTITION BY caseid ORDER BY visitdate DESC) AS ov
+  FROM {{ref('anc_visit_normalized')}} AS visits
+  WHERE visits.visitreason='Close_case'
 )
 
 SELECT  c.id,
@@ -69,7 +69,7 @@ SELECT  c.id,
         c.lmpdate,
         c.edddate,
         c.gravida_count,
-        visit_anc_close.visitdate AS anc_close_date,
+        last_anc_close_visit.visitdate AS anc_close_date,
         c.anc_closereason as pregoutcome,
         c.delivery_date,
         c.delivery_site,
@@ -118,8 +118,8 @@ LEFT JOIN
 (select caseid, why_high_risk,visitdate from ordered_visits_why_high_risk where ov=1) as last_non_null_why_high_risk_visit
 ON last_non_null_why_high_risk_visit.caseid=c.id AND last_non_null_why_high_risk_visit.visitdate > c.lmpdate
 LEFT JOIN
-visit_anc_close
-ON visit_anc_close.caseid=c.id
+(select caseid,visitdate from ordered_visits_anc_close where ov=1) as last_anc_close_visit
+ON last_anc_close_visit.caseid=c.id AND last_anc_close_visit.visitdate > c.lmpdate
 LEFT JOIN 
 {{ref('anc_registration_normalized')}}r
 ON r.caseid=c.id
