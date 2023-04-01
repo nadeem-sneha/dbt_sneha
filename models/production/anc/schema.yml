@@ -24,15 +24,15 @@ models:
     description: "Percentage Metrics/KPIs"
 
   - name: anc_metrics_pct_calculated_all_tmp
-    description: "Percentage Metrics/KPIs"
+    description: "Temp Percentage Metrics/KPIs  created to get around dbt ephemeral restrictions"
   
   - name: anc_metrics_pct_calculated_clustered_tmp
-    description: "Percentage Metrics/KPIs"
+    description: "Temp Percentage Metrics/KPIs clustered created to get around dbt ephemeral restrictions"
 
   - name: anc_metrics
     description: "Percentage Metrics/KPIs"
 
-  - name: anc_metrics_calcualted_grouped_trimester
+  - name: anc_metrics_calculated_grouped_trimester
     description: "Metric/KPI of beneficiary count grouped by trimester and cluster"
   
   - name: anc_metrics_test
@@ -491,18 +491,6 @@ metrics:
     time_grains: [day, week, month]
     calculation_method: derived
     expression: "{{ metric('thr_count') }}::float/ {{ metric('open_case_count') }}"
-    dimensions:
-      - program_code
-      - clustername
-      - coid
-      - aww_number 
-
-  - name: pct_institutional_delivery
-    label: Percentage of Institutional Delivery
-    timestamp: month_start_date
-    time_grains: [day, week, month]
-    calculation_method: derived
-    expression: "{{ metric('institutional_delivery_count') }}::float/ {{ metric('delivery_count') }}"
     dimensions:
       - program_code
       - clustername
