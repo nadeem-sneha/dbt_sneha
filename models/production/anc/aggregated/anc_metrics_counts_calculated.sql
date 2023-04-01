@@ -30,7 +30,7 @@ from {{ metrics.calculate(
         metric('early_registration_count')
     ],
     grain='month',
-    dimensions=[]
+    dimensions=['program_code','clustername','coid','aww_number']
 ) }}
 
 /*'program_code','clustername','coid','aww_number' */

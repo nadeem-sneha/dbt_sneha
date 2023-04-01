@@ -20,17 +20,23 @@ models:
   - name: anc_visit_by_month
     description: "Aggregated visits of cases by CO per month"
 
+  - name: anc_metrics_counts_calculated
+    description: "Percentage Metrics/KPIs"
+
+  - name: anc_metrics_pct_calculated_all_tmp
+    description: "Percentage Metrics/KPIs"
+  
+  - name: anc_metrics_pct_calculated_clustered_tmp
+    description: "Percentage Metrics/KPIs"
+
   - name: anc_metrics
-    description: "Metrics"
-
-  - name: anc_metrics_calculated
     description: "Percentage Metrics/KPIs"
 
-  - name: anc_metrics_pct_calculated
-    description: "Percentage Metrics/KPIs"
-
-  - name: anc_metrics_ben_count_grouped
+  - name: anc_metrics_calcualted_grouped_trimester
     description: "Metric/KPI of beneficiary count grouped by trimester and cluster"
+  
+  - name: anc_metrics_test
+    description: "Metrics tested throguh raw queries"
 
 metrics:
   - name: open_case_count
@@ -229,12 +235,13 @@ metrics:
       - field: referral
         operator: '='
         value: "'Yes'"
-      - field: referral_reasons
-        operator: 'LIKE'
-        value: "'%anc_%'"
-      - field: referral_reasons
-        operator: 'NOT LIKE'
-        value: "'%anc_danger%'"
+      # to be updated later based on feedback from Sheetal/Rijuta
+      # - field: referral_reasons
+      #   operator: 'LIKE'
+      #   value: "'%anc_%'"
+      # - field: referral_reasons
+      #   operator: 'NOT LIKE'
+      #   value: "'%anc_danger%'"
 
   - name: volunteer_referral_count   
     label: Volunteer referral count

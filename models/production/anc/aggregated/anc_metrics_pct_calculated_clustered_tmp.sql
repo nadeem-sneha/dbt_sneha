@@ -1,5 +1,5 @@
 {{ config(
-  materialized='table'
+  materialized='view'
 ) }}
 
 select * 
@@ -17,8 +17,5 @@ from {{ metrics.calculate(
         metric('pct_early_registration')
     ],
     grain='month',
-    dimensions=[]
-) }}
-
-/*  'program_code','clustername','coid','aww_number' */
-
+    dimensions=['program_code','clustername']
+)}}
