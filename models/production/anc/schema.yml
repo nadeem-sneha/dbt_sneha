@@ -4,6 +4,12 @@ models:
 
   - name: anc_case
     description: "merged model with case and last visit date"
+    columns:
+      - name: id
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null
 
   - name: anc_case_open
     description: "date spined case model giving status for each month the case is open"
@@ -404,7 +410,7 @@ metrics:
   - name: pct_total_visits
     label: Percentage of Total Visits
     timestamp: month_start_date
-    time_grains: [day, week, month]
+    time_grains: [month, quarter, year]
     calculation_method: derived
     expression: "{{ metric('total_visits_count') }}::float/ {{ metric('open_case_count') }}"
     dimensions:
@@ -416,7 +422,7 @@ metrics:
   - name: pct_co_visits
     label: Percentage of CO Visits
     timestamp: month_start_date
-    time_grains: [day, week, month]
+    time_grains: [month, quarter, year]
     calculation_method: derived
     expression: "{{ metric('co_visits_count') }}::float/ {{ metric('open_case_count') }}"
     dimensions:
@@ -428,7 +434,7 @@ metrics:
   - name: pct_volunteer_visits
     label: Percentage of Volunteer Visits
     timestamp: month_start_date
-    time_grains: [day, week, month]
+    time_grains: [month, quarter, year]
     calculation_method: derived
     expression: "{{ metric('volunteer_visits_count') }}::float/ {{ metric('open_case_count') }}"
     dimensions:
@@ -440,7 +446,7 @@ metrics:
   - name: pct_volunteer_referral_visits
     label: Percentage of Volunteer Referral Visits
     timestamp: month_start_date
-    time_grains: [day, week, month]
+    time_grains: [month, quarter, year]
     calculation_method: derived
     expression: "{{ metric('volunteer_referral_count') }}::float/ {{ metric('open_case_count') }}"
     dimensions:
@@ -452,7 +458,7 @@ metrics:
   - name: pct_co_referral_visits
     label: Percentage of CO Referral Visits
     timestamp: month_start_date
-    time_grains: [day, week, month]
+    time_grains: [month, quarter, year]
     calculation_method: derived
     expression: "{{ metric('co_referral_count') }}::float/ {{ metric('open_case_count') }}"
     dimensions:
@@ -476,7 +482,7 @@ metrics:
   - name: pct_thr_referral
     label: Percentage of THR Referral
     timestamp: month_start_date
-    time_grains: [day, week, month]
+    time_grains: [month, quarter, year]
     calculation_method: derived
     expression: "{{ metric('thr_referral_count') }}::float/ {{ metric('open_case_count') }}"
     dimensions:
@@ -488,7 +494,7 @@ metrics:
   - name: pct_thr_visits
     label: Percentage of THR Referral
     timestamp: month_start_date
-    time_grains: [day, week, month]
+    time_grains: [month, quarter, year]
     calculation_method: derived
     expression: "{{ metric('thr_count') }}::float/ {{ metric('open_case_count') }}"
     dimensions:
@@ -500,7 +506,7 @@ metrics:
   - name: pct_institutional_delivery
     label: Percentage of Institutional Delivery
     timestamp: month_start_date
-    time_grains: [day, week, month]
+    time_grains: [month, quarter, year]
     calculation_method: derived
     expression: "{{ metric('institutional_delivery_count') }}::float/ {{ metric('delivery_count') }}"
     dimensions:
@@ -512,7 +518,7 @@ metrics:
   - name: pct_anemia_tested
     label: Percentage of Open Cases Anemia Tested
     timestamp: month_start_date
-    time_grains: [day, week, month]
+    time_grains: [month, quarter, year]
     calculation_method: derived
     expression: "{{ metric('anemia_tested_count') }}::float/ {{ metric('open_case_count') }}"
     dimensions:
@@ -524,7 +530,7 @@ metrics:
   - name: pct_early_registration
     label: Percentage of Early registrations
     timestamp: month_start_date
-    time_grains: [day, week, month]
+    time_grains: [month, quarter, year]
     calculation_method: derived
     expression: "{{ metric('early_registration_count') }}::float/ {{ metric('open_case_count') }}"
     dimensions:
