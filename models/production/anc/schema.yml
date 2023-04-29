@@ -44,6 +44,9 @@ models:
   - name: anc_metrics_test
     description: "Metrics tested throguh raw queries"
 
+  - name: anc_metrics_normalized
+    description: "Normalized Metrics in long form instead of wide"
+
 metrics:
   - name: open_case_count
     label: Open Cases Count
