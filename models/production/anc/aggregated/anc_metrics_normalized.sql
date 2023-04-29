@@ -11,7 +11,7 @@ unnest(array[
     '5. ANC CO Visits with Referrals',
     '6. Volunteers involved in Referrals',
     '7. Referrals for THR',
-    '8. isits with ANC women reporting THR usage',
+    '8. Visits with ANC women reporting THR usage',
     '9. Institutional Delivery',
     '10.Anemia Tested',
     '11. Early registration'
