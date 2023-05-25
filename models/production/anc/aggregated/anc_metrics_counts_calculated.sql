@@ -17,7 +17,6 @@ from {{ metrics.calculate(
         metric('total_visits_count'),
         metric('co_visits_count'),
         metric('volunteer_visits_count'),
-        metric('anemia_tested_count'),
         metric('volunteer_open_count'),
         metric('volunteers_involved_in_anc_referral_count'),
         metric('volunteer_referral_count'),

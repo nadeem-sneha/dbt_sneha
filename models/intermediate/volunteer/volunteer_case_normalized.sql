@@ -1,5 +1,5 @@
 {{ config(
-  materialized='table',
+  materialized='view',
    indexes=[
       {'columns': ['_airbyte_ab_id'], 'type': 'hash'}
     ],
@@ -28,7 +28,7 @@ with vol_cte as (select
         _airbyte_data -> 'properties' ->> 'service_registration' as  service_registration,
         date(NULLIF(_airbyte_data -> 'properties' ->> 'date_opened','')) as  case_opened_date,
         date(_airbyte_data ->> 'date_closed'::text) as  date_closed
-from {{ source('commcare_anc', 'raw_case') }}
+from {{ source('commcare_common', 'raw_case') }}
 where (_airbyte_data -> 'properties' ->> 'case_type') = 'case' 
 AND (_airbyte_data -> 'properties' ->> 'individual_category') = 'volunteer'
 /*removing test cases */

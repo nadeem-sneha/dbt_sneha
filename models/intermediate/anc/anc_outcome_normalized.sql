@@ -1,5 +1,5 @@
 {{ config(
-  materialized='table',
+  materialized='view',
    indexes=[
       {'columns': ['_airbyte_ab_id'], 'type': 'hash'}
     ],

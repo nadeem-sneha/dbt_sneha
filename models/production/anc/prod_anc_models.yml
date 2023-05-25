@@ -29,11 +29,11 @@ models:
   - name: anc_metrics_counts_calculated
     description: "Percentage Metrics/KPIs"
 
-  - name: anc_metrics_pct_calculated_all_tmp
-    description: "Temp Percentage Metrics/KPIs  created to get around dbt ephemeral restrictions"
+  - name: anc_metrics_calculated_all_tmp
+    description: "Temp  Metrics/KPIs  created to get around dbt ephemeral restrictions"
   
-  - name: anc_metrics_pct_calculated_clustered_tmp
-    description: "Temp Percentage Metrics/KPIs clustered created to get around dbt ephemeral restrictions"
+  - name: anc_metrics_calculated_clustered_tmp
+    description: "Temp  Metrics/KPIs clustered created to get around dbt ephemeral restrictions"
 
   - name: anc_metrics
     description: "Percentage Metrics/KPIs"

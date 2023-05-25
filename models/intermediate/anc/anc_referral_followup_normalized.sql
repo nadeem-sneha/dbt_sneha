@@ -1,5 +1,5 @@
 {{ config(
-  materialized='table',
+  materialized='view',
    indexes=[
       {'columns': ['_airbyte_ab_id'], 'type': 'hash'}
     ],
@@ -27,7 +27,7 @@ ELSE 'No'
 END AS referral_followed_up,
 _airbyte_ab_id,
 _airbyte_emitted_at
-from {{ source('commcare_anc', 'raw_case') }}
+from {{ source('commcare_common', 'raw_case') }}
 where (_airbyte_data -> 'properties' ->> 'case_type') = 'sneharefollwuptemp'
 AND (_airbyte_data -> 'properties' ->> 'referralcategory') = 'ANC/PNC' 
 /*removing test cases */
