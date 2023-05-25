@@ -41,8 +41,8 @@ models:
   - name: anc_metrics_calculated_grouped_trimester
     description: "Metric/KPI of beneficiary count grouped by trimester and cluster"
   
-  - name: anc_metrics_test
-    description: "Metrics tested throguh raw queries"
+  - name: anc_metrics_definition
+    description: "Metrics defined throguh raw queries"
 
   - name: anc_metrics_normalized
     description: "Normalized Metrics in long form instead of wide"
