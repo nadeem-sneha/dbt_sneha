@@ -26,26 +26,30 @@ models:
   - name: anc_visit_by_month
     description: "Aggregated visits of cases by CO per month"
 
-  - name: anc_metrics_counts_calculated
-    description: "Percentage Metrics/KPIs"
+  - name: anc_case_metrics
+    description: "Case file Metrics defined throguh aggregations"
 
-  - name: anc_metrics_calculated_all_tmp
-    description: "Temp  Metrics/KPIs  created to get around dbt ephemeral restrictions"
-  
-  - name: anc_metrics_calculated_clustered_tmp
+  - name: anc_metrics_definition
+    description: "Metrics defined throguh raw queries"
+
+  - name: anc_metrics_all_tmp
+    description: "Metrics calculated to sum up across clusters - pre-calculated to deal with percentages"
+
+  - name: anc_metrics_clustered_tmp
     description: "Temp  Metrics/KPIs clustered created to get around dbt ephemeral restrictions"
 
   - name: anc_metrics
     description: "Percentage Metrics/KPIs"
 
-  - name: anc_metrics_calculated_grouped_trimester
-    description: "Metric/KPI of beneficiary count grouped by trimester and cluster"
-  
-  - name: anc_metrics_definition
-    description: "Metrics defined throguh raw queries"
+  - name: anc_metrics_monthly
+    description: "Monthly Percentage Metrics/KPIs"
 
   - name: anc_metrics_normalized
-    description: "Normalized Metrics in long form instead of wide"
+    description: "Normalized Percentage Metrics/KPIs in long form instead of wide"
+
+  - name: anc_metrics_normalized_monthly
+    description: "Normalized Percentage Metrics/KPIs"
+
 
 metrics:
   - name: open_case_count
