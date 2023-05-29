@@ -28,11 +28,11 @@ CASE
   WHEN (
   (((calendar.month_end_date-calendar.month_start_date)::int <31) and 
   (c.anc_identify_date <= calendar.month_end_date) AND
-  ((c.anc_close_date>calendar.month_end_date)OR (c.anc_close_date IS NULL)))
+  ((c.anc_close_date>=calendar.month_start_date)OR (c.anc_close_date IS NULL)))
   OR 
   (((calendar.month_end_date-calendar.month_start_date)::int >= 31) and 
   (c.anc_identify_date <= calendar.month_end_date) AND
-  ((c.anc_close_date>(calendar.month_start_date+30))OR (c.anc_close_date IS NULL)))
+  ((c.anc_close_date>=(calendar.month_start_date))OR (c.anc_close_date IS NULL)))
   )
   THEN true
   ELSE false 
@@ -41,12 +41,12 @@ CASE
   WHEN (
   (((calendar.month_end_date-calendar.month_start_date)::int <31) and 
   (c.anc_identify_date <= calendar.month_end_date) AND
-  ((c.anc_close_date>calendar.month_end_date)OR (c.anc_close_date IS NULL)) AND
+  ((c.anc_close_date>=calendar.month_start_date)OR (c.anc_close_date IS NULL)) AND
   (c.earliest_hb_grade_date <= calendar.month_end_date))
   OR 
   (((calendar.month_end_date-calendar.month_start_date)::int >= 31) and 
   (c.anc_identify_date <= calendar.month_end_date) AND
-  ((c.anc_close_date>(calendar.month_start_date+30))OR (c.anc_close_date IS NULL)) AND 
+  ((c.anc_close_date>calendar.month_start_date)OR (c.anc_close_date IS NULL)) AND 
   (c.earliest_hb_grade_date <= calendar.month_end_date))
   )
   THEN true

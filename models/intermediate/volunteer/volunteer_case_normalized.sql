@@ -30,7 +30,7 @@ with vol_cte as (select
         date(_airbyte_data ->> 'date_closed'::text) as  date_closed
 from {{ source('commcare_common', 'raw_case') }}
 where (_airbyte_data -> 'properties' ->> 'case_type') = 'case' 
-AND (_airbyte_data -> 'properties' ->> 'individual_category') = 'volunteer'
+AND (_airbyte_data -> 'properties' ->> 'service_registration') = 'volunteer'
 /*removing test cases */
 AND (_airbyte_data -> 'properties' ->> 'person_name') NOT LIKE '%Demo%'
 AND (_airbyte_data -> 'properties' ->> 'person_name') NOT LIKE '%dummy%'
