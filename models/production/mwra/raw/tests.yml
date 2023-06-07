@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: mwra_referral_followup
+    columns:
+      - name: referral_followup_id
+        tests:
+          - unique
+          - not_null  
+
+  - name: mwra_case
+    columns:
+      - name: case_id
+        tests:
+          - unique
+          - not_null  
+
+  - name: mwra_visit
+    columns:
+      - name: visit_id
+        tests:
+          - unique
+          - not_null  

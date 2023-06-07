@@ -1,0 +1,50 @@
+version: 2
+
+models:
+  - name: mwra_case_normalized
+    columns:
+      - name: case_id
+        tests:
+          - unique
+          - not_null
+      - name: case_name
+        tests:
+          - unique
+          - not_null
+
+  - name: mwra_visits_normalized
+    columns:
+      - name: visit_id
+        tests:
+          - unique
+          - not_null
+      - name: case_id
+        tests:
+          - dbt_utils.relationships_where:
+              to: ref('mwra_case_normalized')
+              field: case_id
+
+  - name: mwra_referral_followup_normalized
+    columns:
+      - name: referral_followup_id
+        tests:
+          - unique
+          - not_null
+      # - name: case_id
+      #   tests:
+      #     - dbt_utils.relationships_where:
+      #         to: ref('mwra_case_normalized')
+      #         field: case_id
+      # - name: woman_id
+      #   tests:
+      #     - dbt_utils.relationships_where:
+      #         to: ref('mwra_case_normalized')
+      #         field: woman_id
+      - name: case_name
+        tests:
+          - dbt_utils.relationships_where:
+              to: ref('mwra_case_normalized')
+              field: case_id_name
+
+          
+                  

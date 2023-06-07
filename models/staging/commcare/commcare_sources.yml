@@ -22,3 +22,20 @@ sources:
       - name: raw_case
         identifier: _airbyte_raw_zzz_case
         description: Cases across entire Commcare application for form streams synced through airbyte
+        
+  - name: commcare_mwra
+    schema: staging
+    tables:
+      - name: raw_mwra_visit
+        identifier: _airbyte_raw_mwra_visit
+        description: ""
+      # - name: 
+      #   identifier: 
+      #   description: ""
+      # - name: 
+      #   identifier: 
+      #   description: ""
+      # - name: 
+      #   identifier: 
+      #   description: ""
+                                
