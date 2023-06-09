@@ -28,6 +28,6 @@ SUM(thr_count)::float/SUM(open_case_count) AS pct_thr_visits,
 SUM(institutional_delivery_count)::float/SUM(delivery_count) AS pct_institutional_delivery,
 SUM(anemia_tested_count)::float/SUM(open_case_count) AS pct_anemia_tested,
 SUM(early_registration_count)::float/SUM(open_case_count) AS pct_early_registration
-FROM {{ ref('anc_metrics_definition') }}
+FROM {{ ref('anc_metrics_clustered_tmp') }}
 GROUP BY month_start_date,month_end_date, program_code
-ORDER BY program_code, month_start_date,month_end_date, clustername
+ORDER BY program_code, month_start_date,month_end_date

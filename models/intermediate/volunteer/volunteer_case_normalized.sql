@@ -35,6 +35,7 @@ AND (_airbyte_data -> 'properties' ->> 'service_registration') = 'volunteer'
 AND (_airbyte_data -> 'properties' ->> 'person_name') NOT LIKE '%Demo%'
 AND (_airbyte_data -> 'properties' ->> 'person_name') NOT LIKE '%dummy%'
 AND (_airbyte_data -> 'properties' ->> 'person_name') NOT LIKE '%error%'
+AND (_airbyte_data -> 'properties' ->> 'cluster_name') NOT LIKE '%Demo%'
 /* remove incorrect screened case data */
 AND  (_airbyte_data ->> 'id') NOT IN 
 (select caseid from {{ref('incorrectly_screened_case_normalized')}}))

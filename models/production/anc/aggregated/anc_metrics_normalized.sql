@@ -38,7 +38,7 @@ unnest(array[
     volunteer_open_count,
     open_case_count,
     open_case_count,
-    open_case_count,
+    delivery_count,
     open_case_count,
     open_case_count
     ]) AS total,

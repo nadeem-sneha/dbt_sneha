@@ -45,12 +45,13 @@ with case_cte as (select
 from {{ source('commcare_common', 'raw_case') }}
 
 where (_airbyte_data -> 'properties' ->> 'case_type') = 'case' 
-AND (_airbyte_data -> 'properties' ->> 'individual_category') = 'mwra'
+AND (_airbyte_data -> 'properties' ->> 'service_registration') = 'mwra'
 AND (_airbyte_data -> 'properties' ->> 'anc_enrolled' IS NOT NULL)
 /*removing test cases */
 AND (_airbyte_data -> 'properties' ->> 'person_name') NOT LIKE '%Demo%'
 AND (_airbyte_data -> 'properties' ->> 'person_name') NOT LIKE '%dummy%'
 AND (_airbyte_data -> 'properties' ->> 'person_name') NOT LIKE '%error%'
+AND (_airbyte_data -> 'properties' ->> 'cluster_name') NOT LIKE '%Demo%'
 /* remove incorrect screened case data */
 AND  (_airbyte_data ->> 'id') NOT IN 
 (select caseid from {{ref('incorrectly_screened_case_normalized')}}))
