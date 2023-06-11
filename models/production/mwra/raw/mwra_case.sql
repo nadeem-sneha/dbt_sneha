@@ -1,7 +1,6 @@
 {{
     config(
-        materialized="table",
-        schema="dev_goalkeep",
+        materialized="table"
     )
 }}
 
