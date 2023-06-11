@@ -122,7 +122,7 @@ FROM {{ref('volunteer_case')}}) v
 WHERE ((sex='female') AND 
 ((v.case_opened_date <= calendar.month_end_date) 
 AND ((v.date_closed>calendar.month_start_date)OR (v.date_closed IS NULL))))
-GROUP BY calendar.month_start_date,calendar.month_end_date,program_code,clustername,coid,aww_number),
+GROUP BY calendar.month_start_date,calendar.month_end_date,clustername,program_code,coid,aww_number),
 
 -- unique volunteers with referrals volunteers_involved_in_anc_referral_count
 volunteers_with_referrals as (
