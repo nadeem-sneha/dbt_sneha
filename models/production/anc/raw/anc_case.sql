@@ -40,6 +40,7 @@ ordered_visits_anc_close AS (
 )
 
 SELECT  c.id,
+        c.case_name,
         c.womanname,
         c.womanid,
         c.person_organizaton_id,

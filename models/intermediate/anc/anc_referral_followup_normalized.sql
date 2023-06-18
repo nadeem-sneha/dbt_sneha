@@ -9,6 +9,8 @@
 
 with referral_cte as (SELECT 
 _airbyte_data ->> 'id' as id,
+_airbyte_data -> 'properties' ->> 'case_name' as case_name,
+_airbyte_data -> 'properties' ->> 'womanname' as womanname,
 _airbyte_data -> 'properties' ->> 'womanid' as womanid,
 (_airbyte_data -> 'closed')::boolean as referral_closed,
 date(NULLIF(_airbyte_data -> 'properties' ->> 'followupdate','')) as followup_date, 

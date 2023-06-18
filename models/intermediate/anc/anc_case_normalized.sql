@@ -11,6 +11,7 @@ with case_cte as (select
         _airbyte_ab_id,
         _airbyte_emitted_at,
         _airbyte_data ->> 'id' as id,
+        _airbyte_data -> 'properties' ->> 'case_name' as case_name,
         _airbyte_data -> 'properties' ->> 'womanid' as womanid,
         _airbyte_data -> 'properties' ->> 'person_organization_id' as person_organizaton_id,
         _airbyte_data -> 'properties' ->> 'womanname' as womanname,
