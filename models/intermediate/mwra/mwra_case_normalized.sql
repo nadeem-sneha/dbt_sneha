@@ -2,7 +2,6 @@
     config(
         materialized="table",
         indexes=[{"columns": ["_airbyte_ab_id"], "type": "hash"}],
-        schema="intermediate",
     )
 }}
 
@@ -15,11 +14,13 @@ with
             _airbyte_data ->> 'id' as case_id,                      -- PRIMARY KEY / change to 'id' later
             -- _airbyte_data ->> 'case_id' as case_id,
             _airbyte_data -> 'properties' ->> 'womanid' as woman_id,        
-            _airbyte_data -> 'properties' ->> 'womanname' as womanname,
+            -- _airbyte_data -> 'properties' ->> 'womanname' as womanname,
+            _airbyte_data -> 'properties' ->> 'person_name' as person_name,
+            _airbyte_data -> 'properties' ->> 'age' as woman_age,
             _airbyte_data -> 'properties' ->> 'hh_number' as hh_number,
-            _airbyte_data ->> 'aww_number' as aww_number,
+            _airbyte_data -> 'properties' ->> 'aww_number' as aww_number,
             _airbyte_data -> 'properties' ->> 'person_organization_id' as person_organizaton_id,
-            _airbyte_data -> 'properties' ->> 'case_name' as case_name,        -- use as PRIMARY KEY for referral-follow-up table ??
+            _airbyte_data -> 'properties' ->> 'case_name' as case_name,        -- use as PRIMARY KEY for referral-follow-up table
             _airbyte_data -> 'properties' ->> 'cluster_id' as clusterid,
             _airbyte_data -> 'properties' ->> 'cluster_name' as clustername,
             _airbyte_data -> 'properties' ->> 'co_id' as coid,
@@ -30,6 +31,7 @@ with
             date(
                 nullif(_airbyte_data -> 'properties' ->> 'date_opened', '')
             ) as case_opened_date,
+            (_airbyte_data ->> 'date_closed')::date as case_closed_date,
             _airbyte_data -> 'properties'->> 'individual_category' as individual_category,
             _airbyte_data -> 'properties'->> 'service_registration' as service_registration
         from {{ source("commcare_common", "raw_case") }}
@@ -37,6 +39,7 @@ with
         where
             (_airbyte_data -> 'properties' ->> 'case_type') = 'case'
             and (_airbyte_data -> 'properties' ->> 'service_registration') = 'mwra'
+            and (_airbyte_data -> 'properties' ->> 'program_code') = 'SCP'
             -- and (_airbyte_data -> 'properties' ->> 'anc_enrolled' is null)
             /* removing test cases */
             and (_airbyte_data -> 'properties' ->> 'person_name') not like '%Demo%'
@@ -48,8 +51,6 @@ with
             )
     )
 
--- select * from case_cte
--- order by _airbyte_emitted_at desc
 
 {{ dbt_utils.deduplicate(
     relation='case_cte',

@@ -79,26 +79,28 @@ with
         where ov = 1
     ), 
 
+    -- get last visit with non null fpmethodnot
+    ordered_visits_fpmethodnot as (
+        select
+            visits.*,
+            row_number() over (partition by case_id order by visit_date desc) as ov
+        from visits
+        where
+            visits.fpmethodnot is not null
+            and visits.fpvisitreason = 'Family_planning'
+    ),
+    last_non_null_fpmethodnot_visit as  (
+        select
+            case_id,
+            fpmethodnot as last_known_fpmethodnot,
+            visit_date
+        from ordered_visits_fpmethodnot
+        where ov = 1
+    ), 
+
     add_visit_dimensions as (
         select
             cases.*,
-            -- -- c.id,
-            -- c.womanname,
-            -- c.case_id,
-            -- c.person_organizaton_id,
-            -- -- c.age,
-            -- c.clusterid,
-            -- c.clustername,
-            -- c.coid,
-            -- c.program_code,
-            -- c.program_name,
-            -- c.hh_number,
-            -- c.aww_number,
-            -- c.closed,
-            -- c.case_type,
-            -- c.individual_category,
-            -- c.service_registration,
-            -- c.case_opened_date,
             last_mwra_visit_date,
             (current_date - last_mwra_visit_date) as days_from_last_visit,
             last_visit_reason,
@@ -118,13 +120,18 @@ with
             end as current_month_visit_status,
             last_known_fp,
             last_known_fpmethod,
-            last_known_mseligible
+            last_known_mseligible,
+            last_non_null_fpmethodnot_visit.last_known_fpmethodnot
         from cases
             left join last_visit using (case_id)
             left join last_non_null_fp_visit using (case_id)
             left join last_non_null_fpmethod_visit using (case_id)
             left join last_non_null_mseligible_visit using (case_id)
+            left join last_non_null_fpmethodnot_visit using (case_id)
     )
 
 select *
 from add_visit_dimensions
+
+
+

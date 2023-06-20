@@ -11,7 +11,6 @@ models:
         tests:
           - unique
           - not_null
-
   - name: mwra_visits_normalized
     columns:
       - name: visit_id
@@ -44,7 +43,7 @@ models:
         tests:
           - dbt_utils.relationships_where:
               to: ref('mwra_case_normalized')
-              field: case_id_name
+              field: case_name
 
           
                   

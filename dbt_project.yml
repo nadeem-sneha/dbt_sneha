@@ -26,3 +26,12 @@ clean-targets:         # directories to be removed by `dbt clean`
 metrics: 
   sneha: 
     +enabled: true
+
+models:
+  sneha:
+    intermediate:
+      schema: intermediate
+      materialized: view
+    production:
+      schema: prod
+      materialized: table

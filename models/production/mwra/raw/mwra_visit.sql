@@ -12,9 +12,11 @@ with
     get_case_details as (
         select
             mwra_visits.*,
-            mwra_cases.womanname,
+            -- mwra_cases.womanname,
+            mwra_cases.person_name,
             mwra_cases.hh_number,
             mwra_cases.aww_number,
+            mwra_cases.clustername,
             mwra_cases.clusterid,
             mwra_cases.coid
         from mwra_visits

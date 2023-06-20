@@ -2,7 +2,7 @@
 target/
 dbt_packages/
 logs/
-.DS_Store.
 tmp/
 .dbtenv/
 .vscode
+.DS_Store.

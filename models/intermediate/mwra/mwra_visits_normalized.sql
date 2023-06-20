@@ -2,7 +2,6 @@
     config(
         materialized="table",
         indexes=[{"columns": ["_airbyte_ab_id"], "type": "hash"}],
-        schema="intermediate",
     )
 }}
 
@@ -13,7 +12,7 @@ with
         select
             _airbyte_ab_id,
             _airbyte_emitted_at,
-            _airbyte_data, -- to be removed
+            -- _airbyte_data, -- to be removed
             (_airbyte_data ->> 'id') as visit_id,   -- PRIMARY KEY
             (_airbyte_data -> 'form' -> 'case_autoload_case1' -> 'case' ->> '@case_id') as case_id,
             -- (_airbyte_data -> 'form' -> 'create_task'  -> 'create_task' -> 'case' ->> '@case_id') as case_id,
