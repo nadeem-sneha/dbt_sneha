@@ -11,6 +11,7 @@ sum( case when days_from_last_visit >30 then 1 else 0 end ) AS last_30days_pendi
 sum( case when  high_risk_preg LIKE 'Yes' then 1 else 0 end ) AS high_risk_count,
 sum(CAST( case when currentmonthvisitstatus='Visited' then 1 else 0 end AS FLOAT )) / CAST(count(1) AS FLOAT) AS pct_current_month_visited,
 sum(CAST(case when  high_risk_preg='Yes' then 1 else 0 end AS FLOAT )) / CAST(count(1) AS FLOAT)  AS pct_high_risk
-from {{ref('anc_case')}}
+FROM {{ref('anc_case')}} 
+WHERE anc_closed IS NULL
 GROUP BY program_code,clustername,coid,trimester
 ORDER BY program_code,clustername,coid,trimester

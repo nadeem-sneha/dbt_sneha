@@ -46,7 +46,7 @@ CASE
   OR 
   (((calendar.month_end_date-calendar.month_start_date)::int >= 31) and 
   (c.anc_identify_date <= calendar.month_end_date) AND
-  ((c.anc_close_date>calendar.month_start_date)OR (c.anc_close_date IS NULL)) AND 
+  ((c.anc_close_date>=calendar.month_start_date)OR (c.anc_close_date IS NULL)) AND 
   (c.earliest_hb_grade_date <= calendar.month_end_date))
   )
   THEN true
@@ -83,7 +83,7 @@ FROM calendar
 CROSS JOIN  
 (SELECT caseid,visitdate, visitreason, program_code,clustername,coid,aww_number 
 FROM {{ref('anc_visit')}}) v
-WHERE visitreason='ANC' AND v.visitdate  BETWEEN calendar.month_start_date AND calendar.month_end_date
+WHERE (visitreason='ANC' OR visitreason='Close_case') AND v.visitdate  BETWEEN calendar.month_start_date AND calendar.month_end_date
 GROUP BY calendar.month_start_date,calendar.month_end_date,program_code,clustername,coid,aww_number ),
 
 -- co unique visits 
@@ -94,7 +94,7 @@ FROM calendar
 CROSS JOIN  
 (SELECT caseid,visitdate, visitreason, conducted_by, program_code,clustername,coid,aww_number 
 FROM {{ref('anc_visit')}}) v
-WHERE visitreason='ANC' AND conducted_by='co' AND v.visitdate  BETWEEN calendar.month_start_date AND calendar.month_end_date
+WHERE ((visitreason='ANC' AND conducted_by='co') OR (visitreason='Close_case')) AND v.visitdate  BETWEEN calendar.month_start_date AND calendar.month_end_date
 GROUP BY calendar.month_start_date,calendar.month_end_date,program_code,clustername,coid,aww_number),
 
 -- volunteer unique visits 
@@ -105,7 +105,7 @@ FROM calendar
 CROSS JOIN  
 (SELECT caseid,visitdate, visitreason, conducted_by, program_code,clustername,coid,aww_number 
 FROM {{ref('anc_visit')}}) v
-WHERE visitreason='ANC' AND conducted_by='volunteer' AND v.visitdate  BETWEEN calendar.month_start_date AND calendar.month_end_date
+WHERE (visitreason='ANC' OR visitreason='Close_case') AND conducted_by='volunteer' AND v.visitdate  BETWEEN calendar.month_start_date AND calendar.month_end_date
 GROUP BY calendar.month_start_date,calendar.month_end_date,program_code,clustername,coid,aww_number),
 
 -- volunteer count

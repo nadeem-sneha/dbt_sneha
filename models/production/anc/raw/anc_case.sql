@@ -96,8 +96,10 @@ SELECT  c.id,
         last_visit.lastvisitreason,
         last_visit.last_visit_conducted_by,
         CASE 
-              when (extract(month FROM last_visit.lastvisitdate) = extract(month from current_date))
-               AND (extract(year FROM last_visit.lastvisitdate) = extract(year from current_date)) 
+              when ((extract(month FROM last_visit.lastvisitdate) = extract(month from current_date))
+               AND (extract(year FROM last_visit.lastvisitdate) = extract(year from current_date)))
+               OR ((extract(month FROM r.anc_identify_date) = extract(month from current_date))
+               AND (extract(year FROM r.anc_identify_date) = extract(year from current_date)))
                then 'Visited' 
                ELSE 'Not Yet Visited' 
         END AS currentmonthvisitStatus

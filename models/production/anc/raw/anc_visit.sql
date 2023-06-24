@@ -7,4 +7,4 @@ c.clusterid,c.clustername,c.program_code,c.coid,c.womanname,c.womanid,c.aww_numb
 FROM {{ref('anc_visit_normalized')}} AS visits  
 LEFT JOIN {{ref('anc_case_normalized')}} AS c
 ON visits.caseid=c.id
-WHERE  visits.visitreason='ANC' 
+WHERE  (visits.visitreason='ANC' or visits.visitreason='Close_case')
