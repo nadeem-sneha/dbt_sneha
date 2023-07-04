@@ -1,0 +1,16 @@
+version: 2
+
+models: 
+
+  - name: child_case
+    description: "merged model with child case data"
+    columns:
+      - name: id
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null
+  - name: child_immunization_status
+    description: "child immunization status"
+  - name: child_immunization_case
+    description: "merged model with child immunization case data"

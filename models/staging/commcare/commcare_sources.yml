@@ -33,6 +33,16 @@ sources:
       - name: raw_mwra_visit
         identifier: _airbyte_raw_mwra_visit
         description: ""
+
+  - name: commcare_immunization
+    schema: staging
+    tables:
+      - name: raw_child_immunization_due_doses
+        identifier: _airbyte_raw_record_due_doses
+        description: ""
+      - name: raw_child_immunization_missed_doses
+        identifier: _airbyte_raw_record_missed_doses
+        description: ""
       # - name: 
       #   identifier: 
       #   description: ""
