@@ -1,5 +1,5 @@
 {{ config(
-  materialized='view',
+  materialized='table',
    indexes=[
       {'columns': ['_airbyte_ab_id'], 'type': 'hash'}
     ],
@@ -56,6 +56,7 @@ AND (_airbyte_data -> 'properties' ->> 'cluster_name') NOT LIKE '%Demo%'
 /* remove incorrect screened case data */
 AND  (_airbyte_data ->> 'id') NOT IN 
 (select caseid from {{ref('incorrectly_screened_case_normalized')}}))
+
 
 {{ dbt_utils.deduplicate(
     relation='case_cte',

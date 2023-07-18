@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: child_immunization_case_normalized
+  - name: child_immunization_doses_normalized
     description: "Normalized immunization model of children" 
     +schema: intermediate
     columns: 
@@ -10,5 +10,15 @@ models:
          tests:
            - unique
            - not_null 
+  - name: child_due_doses_normalized
+    description: "Due doses immunization model of children" 
+    +schema: intermediate
+    columns: 
+       - name: _airbyte_ab_id
+         description: "The primary key for this table"
+         tests:
+           - unique
+           - not_null 
+
 
  

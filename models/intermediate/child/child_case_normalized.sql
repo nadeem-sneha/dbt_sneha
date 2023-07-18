@@ -1,10 +1,9 @@
 {{ config(
-  materialized='view',
+  materialized='table',
    indexes=[
       {'columns': ['_airbyte_ab_id'], 'type': 'hash'}
     ],
     schema='intermediate'
-
 ) }}
 
 with case_cte as (select
@@ -43,6 +42,7 @@ AND (_airbyte_data -> 'properties' ->> 'childname') NOT LIKE '%Demo%'
 AND (_airbyte_data -> 'properties' ->> 'childname') NOT LIKE '%dummy%'
 AND (_airbyte_data -> 'properties' ->> 'childname') NOT LIKE '%error%'
 AND (_airbyte_data -> 'properties' ->> 'childname') NOT LIKE '%Demo%'
+AND (_airbyte_data -> 'properties' ->> 'childname') NOT LIKE '%Test%'
 /* remove incorrect screened case data */
 AND  (_airbyte_data ->> 'id') NOT IN 
 (select caseid from {{ref('incorrectly_screened_case_normalized')}}))

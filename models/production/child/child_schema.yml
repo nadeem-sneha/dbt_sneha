@@ -14,3 +14,5 @@ models:
     description: "child immunization status"
   - name: child_immunization_case
     description: "merged model with child immunization case data"
+  - name: child_immunization_case_metrics
+    description: "test model with child immunization case data"
