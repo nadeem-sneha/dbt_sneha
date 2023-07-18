@@ -6,9 +6,11 @@
         {{ default_schema }}
 
     {%- else -%}
-
-        {{ custom_schema_name }}
-
+        {%- if target.name != "prod" -%}
+            {{target.name}}_{{ custom_schema_name }}
+        {%- else -%}
+         {{custom_schema_name}}
+        {%- endif -%}
     {%- endif -%}
 
 {%- endmacro %}

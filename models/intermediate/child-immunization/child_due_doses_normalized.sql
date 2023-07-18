@@ -1,8 +1,6 @@
 {{ config(
-  materialized='table',
    indexes=[
-    ],
-    schema='intermediate'
+    ]
 
 ) }}
 

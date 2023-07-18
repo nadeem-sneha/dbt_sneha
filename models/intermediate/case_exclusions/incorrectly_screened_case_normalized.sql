@@ -1,9 +1,7 @@
 {{ config(
-  materialized='table',
    indexes=[
       {'columns': ['_airbyte_ab_id'], 'type': 'hash'}
-    ],
-    schema='intermediate'
+    ]
 ) }}
 
 with incorrectly_screened_cte as (select (_airbyte_data->'form'->'case_load_person1'->'case'->>'@case_id')  AS caseid,
