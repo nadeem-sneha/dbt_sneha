@@ -6,8 +6,8 @@
         {{ default_schema }}
 
     {%- else -%}
-        {%- if target.name != "prod" -%}
-            {{target.name}}_{{ custom_schema_name }}
+        {%- if target.schema != "prod" -%}
+            {{target.schema}}_{{ custom_schema_name }}
         {%- else -%}
          {{custom_schema_name}}
         {%- endif -%}
