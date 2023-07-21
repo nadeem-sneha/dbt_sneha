@@ -34,7 +34,7 @@ AND  (_airbyte_data -> 'form' ->> 'load_person_case_id') NOT IN (select caseid f
 
 {{ dbt_utils.deduplicate(
     relation='visit_cte',
-    partition_by='id',
+    partition_by='id,visitreason, visitdate',
     order_by='_airbyte_emitted_at desc',
    )
 }}
