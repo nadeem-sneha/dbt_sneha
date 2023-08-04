@@ -10,3 +10,13 @@ models:
          tests:
            - unique
            - not_null 
+
+  - name: volunteer_training_normalized
+    description: "Normalized model of Volunteer Training" 
+    +schema: intermediate
+    columns: 
+       - name: _airbyte_ab_id
+         description: "The primary key for this table"
+         tests:
+           - unique
+           - not_null

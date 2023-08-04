@@ -25,7 +25,7 @@ sources:
         description: Cases across entire Commcare application for form streams synced through airbyte
       - name: raw_volunteer_info
         identifier: _airbyte_raw_volunteer_info
-        description: Volunteer registration form that is used ot augment the volunteer case model
+        description: Volunteer registration form that is used ot augment the volunteer case model 
         
   - name: commcare_mwra
     schema: staging
@@ -43,6 +43,13 @@ sources:
       - name: raw_child_immunization_missed_doses
         identifier: _airbyte_raw_record_missed_doses
         description: ""
+
+  - name: commcare_volunteer
+    schema: staging
+    tables:
+      - name: raw_volunteer_training
+        identifier: _airbyte_raw_volunteer_training
+        description: Volunteer training form
       # - name: 
       #   identifier: 
       #   description: ""
