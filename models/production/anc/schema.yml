@@ -32,12 +32,6 @@ models:
   - name: anc_metrics_definition
     description: "Metrics defined throguh raw queries"
 
-  - name: anc_metrics_all_tmp
-    description: "Metrics calculated to sum up across clusters - pre-calculated to deal with percentages"
-
-  - name: anc_metrics_clustered_tmp
-    description: "Temp  Metrics/KPIs clustered created to get around dbt ephemeral restrictions"
-
   - name: anc_metrics
     description: "Percentage Metrics/KPIs"
 
@@ -46,6 +40,3 @@ models:
 
   - name: anc_metrics_normalized
     description: "Normalized Percentage Metrics/KPIs in long form instead of wide"
-
-  - name: anc_metrics_normalized_monthly
-    description: "Normalized Percentage Metrics/KPIs"
