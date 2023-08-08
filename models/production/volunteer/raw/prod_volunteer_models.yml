@@ -13,3 +13,11 @@ models:
 
   - name: volunteer_open_case
     description: "volunteer open cases by month "
+
+  - name: volunteer_training
+    description: "All volunteer data for male and female "
+
+  - name: volunteer_metrics_definition
+    description: "volunteer metrics "
+
+

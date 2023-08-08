@@ -12,11 +12,11 @@ select
   vcn.hh_number,
   vcn.person_name,
   vcn.sex,
-  vld.id,
-  vld.voltrain,
-  vld.interaction,
-  vld.meetingtypes,
-  vld.meetingdate
+  vtn.id,
+  vtn.voltrain,
+  vtn.interaction,
+  vtn.meeting_type,
+  vtn.meeting_date 
 FROM {{ref('volunteer_case_normalized')}} as vcn
-join {{ref('volunteer_training_normalized')}} as vld
-on vcn.id = vld.case_id
+join {{ref('volunteer_training_normalized')}} as vtn
+on vcn.id = vtn.case_id

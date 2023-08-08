@@ -11,8 +11,8 @@ with vol_cte as (select
         _airbyte_emitted_at,
         _airbyte_data ->> 'id' as id,
         _airbyte_data ->'form'->'case_load_case0'->'case'->>'@case_id' AS case_id,
-        date(NULLIF(_airbyte_data -> 'form' ->> 'meetingdate','')) as meetingdate,
-        _airbyte_data -> 'form' ->> 'meetingtypes' as meetingtypes,
+        date(NULLIF(_airbyte_data -> 'form' ->> 'meetingdate','')) as meeting_date,
+        _airbyte_data -> 'form' ->> 'meetingtypes' as meeting_type,
         _airbyte_data -> 'form' ->> 'voltrain' as  voltrain,
         _airbyte_data -> 'form' ->> 'interaction' as interaction,
     	  _airbyte_data -> 'form' ->> 'vol_enrolldate' as vol_enrolldate
