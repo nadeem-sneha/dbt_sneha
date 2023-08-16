@@ -1,41 +1,45 @@
-{{
-    config(
-        materialized="table"
-    )
-}}
-
 with
     mwra_case as (select * from {{ ref("mwra_case_normalized") }}),
-    
     mwra_referral_followup as (
         select * from {{ ref("mwra_referral_followup_normalized") }}
     ),
 
-    get_case_details as (
+    get_case_details_using_case_name as (
         select
             mwra_referral_followup.*,
-            -- mwra_referral_followup.referral_followup_id,
-            -- mwra_referral_followup.case_name,
-            -- mwra_referral_followup.woman_id,
-            -- mwra_referral_followup.case_type,
-            -- mwra_referral_followup.referral_closed,
-            -- mwra_referral_followup.referral_category,
-            -- mwra_referral_followup.referral_reason,
-            -- mwra_referral_followup.referral_date,
-            -- mwra_referral_followup.referral_place,
-            -- mwra_referral_followup.status_treatment,
-            -- mwra_referral_followup.followup_required,
-            -- mwra_referral_followup.referral_followed_up,
-            -- mwra_referral_followup.accessref,
-            -- mwra_case.womanname,
             mwra_case.person_name,
             mwra_case.hh_number,
             mwra_case.aww_number,
+            mwra_case.program_code,
+            mwra_case.clustername,
             mwra_case.clusterid,
             mwra_case.coid
         from mwra_referral_followup
-            left join mwra_case using (case_name)
+            inner join mwra_case using (case_name)
     ),
+
+    get_case_details_using_woman_id as (
+        select
+            mwra_referral_followup.*,
+            mwra_case.person_name,
+            mwra_case.hh_number,
+            mwra_case.aww_number,
+            mwra_case.program_code,
+            mwra_case.clustername,
+            mwra_case.clusterid,
+            mwra_case.coid
+        from mwra_referral_followup
+            left join mwra_case using (woman_id)
+        where referral_followup_id not in
+            (select referral_followup_id from get_case_details_using_case_name)
+    ),
+
+    union_records as (
+        select * from get_case_details_using_case_name
+        union all
+        select * from get_case_details_using_woman_id
+    ),
+
     add_status_fields as (
         select
             *,
@@ -43,18 +47,18 @@ with
                 when
                     status_treatment
                     in ('Service_availed', 'Currently_availing')
-                then 'Service availed'
-                else 'Service not availed'
+                then 'Yes'
+                else 'No'
             end as availed_status,
             case
                 when
                     accessref in (
                         'Yes_referred_place', 'Yes_another_hospital', 'Hospital_Refusal'
                     )
-                then 'Service accessed'
-                else 'Service not accessed'
+                then 'Yes'
+                else 'No'
             end as accessed_status
-        from get_case_details
+        from union_records
     )
 
 

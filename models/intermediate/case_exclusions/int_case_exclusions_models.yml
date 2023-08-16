@@ -2,11 +2,13 @@ version: 2
 
 models:
   - name: incorrectly_screened_case_normalized
-    description: "Normalized model of Volunteers" 
+    description: "Normalized model of Volunteers"
+    config:
+      tags: ["mwra", "anc"]
     +schema: intermediate
-    columns: 
-       - name: _airbyte_ab_id
-         description: "The primary key for this table"
-         tests:
-           - unique
-           - not_null 
+    columns:
+      - name: _airbyte_ab_id
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null

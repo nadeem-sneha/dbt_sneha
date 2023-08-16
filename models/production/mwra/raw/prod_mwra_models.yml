@@ -2,6 +2,8 @@ version: 2
 
 models:
   - name: mwra_referral_followup
+    config:
+        tags: "mwra"
     columns:
       - name: referral_followup_id
         tests:
@@ -9,6 +11,8 @@ models:
           - not_null  
 
   - name: mwra_case
+    config:
+        tags: "mwra"
     columns:
       - name: case_id
         tests:
@@ -16,6 +20,8 @@ models:
           - not_null  
 
   - name: mwra_visit
+    config:
+        tags: "mwra"
     columns:
       - name: visit_id
         tests:

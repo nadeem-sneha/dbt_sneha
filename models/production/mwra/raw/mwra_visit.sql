@@ -1,18 +1,11 @@
-{{
-    config(
-        materialized="table"
-    )
-}}
-
 with
-
     mwra_visits as (select * from {{ ref("mwra_visits_normalized") }}),
     mwra_cases as (select * from {{ ref("mwra_case_normalized") }}),
 
     get_case_details as (
         select
             mwra_visits.*,
-            -- mwra_cases.womanname,
+            mwra_cases.program_code,
             mwra_cases.person_name,
             mwra_cases.hh_number,
             mwra_cases.aww_number,
@@ -30,6 +23,7 @@ with
     get_previous_visit_details as (
         select
             visit_id,
+            fpmethod,
             lag(fp) over (
                 partition by case_id order by visit_date
             ) as prev_fp,
@@ -49,20 +43,26 @@ with
     ),
     get_fp_conversion as (
         select
-            *,
+            visit_id,
+            prev_fp,
+            prev_fpmethod,
+            prev_mseligible,
+            last_mwra_visit_date,
+            n_minus_2_fpmethod,
             case
-                when n_minus_2_fpmethod is null and prev_fpmethod is not null then 'new user'
-                when n_minus_2_fpmethod is not null and prev_fpmethod is null then 'relapse new user'
+                when prev_fpmethod is null and fpmethod is not null then 'new user'
+                when prev_fpmethod is not null and fpmethod is null then 'relapse non user'
                 when
-                    n_minus_2_fpmethod != prev_fpmethod
-                    and n_minus_2_fpmethod is not null
+                    prev_fpmethod != fpmethod
                     and prev_fpmethod is not null
+                    and fpmethod is not null
                 then 'method change'
                 when
-                    n_minus_2_fpmethod = prev_fpmethod
-                    and n_minus_2_fpmethod is not null
+                    prev_fpmethod = fpmethod
                     and prev_fpmethod is not null
-                then 'method same' 
+                    and fpmethod is not null
+                then 'method same'
+                else 'non user'
             end as fp_conversion
         from get_previous_visit_details
     ),
@@ -81,6 +81,6 @@ with
             left join get_days_since_last_co_visit using (visit_id)
     )
 
-select *
+select 
+*
 from join_co_visit_dimensions_to_all_visits
-

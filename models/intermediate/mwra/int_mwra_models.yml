@@ -2,6 +2,8 @@ version: 2
 
 models:
   - name: mwra_case_normalized
+    config:
+        tags: "mwra"
     columns:
       - name: case_id
         tests:
@@ -12,6 +14,8 @@ models:
           - unique
           - not_null
   - name: mwra_visits_normalized
+    config:
+        tags: "mwra"
     columns:
       - name: visit_id
         tests:
@@ -24,6 +28,8 @@ models:
               field: case_id
 
   - name: mwra_referral_followup_normalized
+    config:
+        tags: "mwra"
     columns:
       - name: referral_followup_id
         tests:

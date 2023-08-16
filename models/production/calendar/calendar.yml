@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: calendar_table
+    config:
+      tags: "mwra"
+    tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - month_start_date
+          - month_end_date

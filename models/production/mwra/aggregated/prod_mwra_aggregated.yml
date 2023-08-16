@@ -1,0 +1,101 @@
+version: 2
+
+models:
+  - name: mwra_unvisited_open_cases
+    config:
+      tags: "mwra"
+    tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - month_start_date
+          - month_end_date
+          - program_code
+          - clustername
+          - coid
+          - aww_number
+
+  - name: mwra_metrics_definition
+    config:
+      tags: "mwra"
+    tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - month_start_date
+          - month_end_date
+          - program_code
+          - clustername
+          - coid
+          - aww_number
+
+  - name: mwra_metrics_clustered
+    config:
+      tags: "mwra"
+    tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - month_start_date
+          - month_end_date
+          - program_code
+          - clustername
+
+  - name: mwra_metrics_normalized
+    config:
+      tags: "mwra"
+    tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - month_start_date
+          - month_end_date
+          - program_code
+          - clustername
+          - indicator
+
+  - name: mwra_metrics_monthly
+    config:
+      tags: "mwra"
+    tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - month_start_date
+          - month_end_date
+          - program_code
+          - clustername
+    
+  - name: mwra_metrics_monthly_co
+    config:
+      tags: "mwra"
+    tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - month_start_date
+          - month_end_date
+          - program_code
+          - clustername
+          - coid
+          - aww_number
+
+  - name: mwra_method_distribution
+    config:
+      tags: "mwra"
+    tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - month_start_date
+          - program_code
+          - clustername
+          - coid
+          - aww_number
+          - last_known_fpmethod
+
+  - name: mwra_conversion_distribution
+    config:
+      tags: "mwra"
+    tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - month_start_date
+          - program_code
+          - clustername
+          - coid
+          - aww_number
+          - fp_conversion

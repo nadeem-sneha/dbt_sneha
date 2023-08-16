@@ -9,14 +9,22 @@ with
         }}
     ),
 
-    add_month_end_date as (
+    get_month_end_date as (
         select
-            date_month::date as month_start_date,
             (
                 date_month + interval '1 month' - interval '1 day'
             )::date as month_end_date
         from create_date_series
+    ),
+
+    get_all_possible_monthly_date_ranges as (
+        select
+            date_month::date as month_start_date,
+            month_end_date
+        from create_date_series
+        cross join get_month_end_date
+        where date_month < month_end_date
     )
 
 select *
-from add_month_end_date
+from get_all_possible_monthly_date_ranges

@@ -1,6 +1,5 @@
 {{
     config(
-        materialized="table",
         indexes=[{"columns": ["_airbyte_ab_id"], "type": "hash"}],
     )
 }}
@@ -10,11 +9,8 @@ with
         select
             _airbyte_ab_id,
             _airbyte_emitted_at,
-            -- _airbyte_data,
-            _airbyte_data ->> 'id' as case_id,                      -- PRIMARY KEY / change to 'id' later
-            -- _airbyte_data ->> 'case_id' as case_id,
+            _airbyte_data ->> 'id' as case_id,                      
             _airbyte_data -> 'properties' ->> 'womanid' as woman_id,        
-            -- _airbyte_data -> 'properties' ->> 'womanname' as womanname,
             _airbyte_data -> 'properties' ->> 'person_name' as person_name,
             _airbyte_data -> 'properties' ->> 'age' as woman_age,
             _airbyte_data -> 'properties' ->> 'hh_number' as hh_number,
@@ -39,9 +35,7 @@ with
         where
             (_airbyte_data -> 'properties' ->> 'case_type') = 'case'
             and (_airbyte_data -> 'properties' ->> 'service_registration') = 'mwra'
-            and (_airbyte_data -> 'properties' ->> 'program_code') = 'SCP'
-            -- and (_airbyte_data -> 'properties' ->> 'anc_enrolled' is null)
-            /* removing test cases */
+            /* remove test cases */
             and (_airbyte_data -> 'properties' ->> 'person_name') not like '%Demo%'
             and (_airbyte_data -> 'properties' ->> 'person_name') not like '%dummy%'
             and (_airbyte_data -> 'properties' ->> 'person_name') not like '%error%'
