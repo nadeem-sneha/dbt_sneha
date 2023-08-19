@@ -9,6 +9,7 @@ with
         select
             _airbyte_data ->> 'id' as referral_followup_id,                 -- PRIMARY KEY
             _airbyte_data -> 'properties' ->> 'case_name' as case_name,     -- FOREIGN KEY
+            _airbyte_data -> 'properties' ->> 'womanid' as woman_id,        -- ADDIONAL FOREIGN KEY
             _airbyte_data -> 'properties' ->> 'co_id' as co_id,
             (_airbyte_data -> 'closed')::boolean as referral_closed,
             date(

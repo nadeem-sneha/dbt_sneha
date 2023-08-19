@@ -29,7 +29,7 @@ with
             mwra_case.clusterid,
             mwra_case.coid
         from mwra_referral_followup
-            left join mwra_case using (case_name)
+            left join mwra_case using (woman_id)
         where referral_followup_id not in
             (select referral_followup_id from get_case_details_using_case_name)
     ),
